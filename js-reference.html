@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JavaScript — Referencia Completa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d00;
+      --surface: #181800;
+      --surface2: #1e1e00;
+      --border: #2a2a00;
+      --text: #f8f8e0;
+      --muted: #7a7a40;
+      --accent: #ffd54f;
+      --accent2: #fff176;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+    nav .title { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); margin-left: auto; font-size: 1.1rem; }
+
+    .layout { display: flex; }
+    aside {
+      width: 220px; border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      position: sticky; top: 53px; height: calc(100vh - 53px); overflow-y: auto;
+    }
+    aside h3 { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; padding: 0.5rem 1.5rem; margin-bottom: 0.25rem; font-family: 'DM Mono', monospace; }
+    aside a { display: block; padding: 0.35rem 1.5rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent; }
+    aside a:hover { color: var(--accent); border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, transparent); }
+
+    main { flex: 1; padding: 3rem 4rem; max-width: 920px; }
+    .section-header { margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .section-header h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+    .section-header p { color: var(--muted); font-size: 0.9rem; }
+    section { margin-bottom: 4rem; scroll-margin-top: 70px; }
+    h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; color: var(--accent2); margin-bottom: 1rem; margin-top: 2rem; }
+    p { color: color-mix(in srgb, var(--text) 65%, transparent); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem; }
+
+    .demo-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+    .demo-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; padding: 0.5rem 1rem; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; align-items: center; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot.preview { background: #4ade80; }
+    .dot.code    { background: var(--accent); }
+    .demo-preview { padding: 1.5rem; background: #fafafa; color: #111; font-family: 'DM Sans', sans-serif; }
+    .demo-code { background: #080800; padding: 1.25rem; overflow-x: auto; }
+    .demo-code pre { font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 1.6; color: #c8c860; }
+    .demo-code .kw    { color: #ffd54f; font-weight: 600; }   /* keywords */
+    .demo-code .fn    { color: #fff176; }                     /* functions */
+    .demo-code .str   { color: #a5d6a7; }                     /* strings */
+    .demo-code .num   { color: #80deea; }                     /* numbers */
+    .demo-code .cmt   { color: #3a3a10; }                     /* comments */
+    .demo-code .mtd   { color: #ffcc80; }                     /* methods */
+
+    /* INTERACTIVE DEMOS */
+    .interactive { display: flex; flex-direction: column; gap: 0.75rem; }
+    .demo-btn {
+      background: #ffd54f; color: #111; border: none; padding: 8px 16px;
+      border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600;
+      font-family: 'DM Mono', monospace; transition: background 0.2s;
+    }
+    .demo-btn:hover { background: #ffb300; }
+    .demo-output {
+      background: #111; color: #4ade80; font-family: 'DM Mono', monospace;
+      font-size: 0.8rem; padding: 0.75rem; border-radius: 6px; min-height: 40px;
+      white-space: pre-wrap; line-height: 1.5;
+    }
+
+    /* DOM DEMO */
+    #dom-caja {
+      background: #e3f2fd; border: 2px solid #1976d2;
+      padding: 12px; border-radius: 8px; font-size: 0.9rem;
+      min-height: 40px; transition: all 0.3s;
+    }
+    .dom-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* EVENT DEMO */
+    #event-box {
+      width: 100%; height: 80px; background: #e8f5e9; border: 2px dashed #2e7d32;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; color: #1b5e20; cursor: pointer; transition: all 0.2s;
+      user-select: none;
+    }
+    #event-box:hover { background: #c8e6c9; }
+
+    /* FETCH DEMO */
+    #fetch-result { background: #111; color: #80deea; font-family: 'DM Mono', monospace; font-size: 0.75rem; padding: 0.75rem; border-radius: 6px; max-height: 140px; overflow-y: auto; }
+
+    /* STORAGE DEMO */
+    .storage-demo { display: flex; flex-direction: column; gap: 0.5rem; }
+    .storage-demo input { border: 1px solid #ccc; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; }
+    .storage-demo .row  { display: flex; gap: 8px; }
+
+    /* ARRAY/OBJECT visual */
+    .array-viz { display: flex; gap: 4px; flex-wrap: wrap; }
+    .arr-item { background: #ffd54f; color: #111; padding: 6px 12px; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 0.8rem; font-weight: 600; }
+    .arr-item.filtered { background: #4ade80; }
+    .arr-item.mapped   { background: #60a5fa; color: white; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html">← Inicio</a>
+  <a href="html-reference.html">HTML</a>
+  <a href="css-reference.html">CSS</a>
+  <span class="title">JS Reference</span>
+</nav>
+
+<div class="layout">
+  <aside>
+    <h3>Secciones</h3>
+    <a href="#variables">Variables</a>
+    <a href="#tipos">Tipos de datos</a>
+    <a href="#operadores">Operadores</a>
+    <a href="#condicionales">Condicionales</a>
+    <a href="#bucles">Bucles</a>
+    <a href="#funciones">Funciones</a>
+    <a href="#arrays">Arrays</a>
+    <a href="#objetos">Objetos</a>
+    <a href="#dom">DOM</a>
+    <a href="#eventos">Eventos</a>
+    <a href="#async">Async / Promesas</a>
+    <a href="#fetch">Fetch API</a>
+    <a href="#storage">Storage</a>
+    <a href="#es6">ES6+</a>
+  </aside>
+
+  <main>
+    <div class="section-header">
+      <h2>⚡ JavaScript Reference</h2>
+      <p>Variables, funciones, DOM, eventos, async y todo lo que necesitas para programar en JS.</p>
+    </div>
+
+    <!-- VARIABLES -->
+    <section id="variables">
+      <h3>📦 Variables</h3>
+      <p>Tres formas de declarar variables. La regla general: usa <code>const</code> por defecto, <code>let</code> cuando necesitas reasignar.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo interactivo</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <button class="demo-btn" onclick="
+              let resultado = '';
+              const nombre = 'Breyner';
+              let edad = 20;
+              var ciudad = 'Barranquilla';
+              resultado += 'const nombre = ' + JSON.stringify(nombre) + '\n';
+              resultado += 'let edad = ' + edad + '\n';
+              resultado += 'var ciudad = ' + JSON.stringify(ciudad) + '\n';
+              edad = 21; resultado += 'edad reasignada = ' + edad;
+              document.getElementById('out-var').textContent = resultado;
+            ">▶ Ejecutar</button>
+            <div class="demo-output" id="out-var">Haz clic para ver el resultado...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// ═══ DECLARACIÓN ═══</span>
+<span class="kw">const</span> nombre = <span class="str">'Breyner'</span>;   <span class="cmt">// no se puede reasignar</span>
+<span class="kw">let</span>   edad   = <span class="num">20</span>;           <span class="cmt">// sí se puede reasignar</span>
+<span class="kw">var</span>   ciudad = <span class="str">'Barranquilla'</span>; <span class="cmt">// evitar (scope de función, hoisting)</span>
+
+<span class="cmt">// const NO significa inmutable para objetos/arrays</span>
+<span class="kw">const</span> arr = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>];
+arr.<span class="mtd">push</span>(<span class="num">4</span>);  <span class="cmt">// OK: el array puede mutar</span>
+<span class="cmt">// arr = [5, 6]; // ❌ ERROR: no puedes reasignar la referencia</span>
+
+<span class="cmt">// SCOPE (alcance)</span>
+<span class="kw">let</span> global = <span class="str">'disponible en todo el archivo'</span>;
+<span class="kw">function</span> <span class="fn">ejemplo</span>() {
+  <span class="kw">let</span> local = <span class="str">'solo dentro de la función'</span>;
+  <span class="kw">if</span> (<span class="kw">true</span>) {
+    <span class="kw">let</span> bloque = <span class="str">'solo dentro del if'</span>;
+  }
+}
+
+<span class="cmt">// HOISTING: var se "sube", let/const no</span>
+console.<span class="mtd">log</span>(x);  <span class="cmt">// undefined (var hoisted)</span>
+<span class="kw">var</span> x = <span class="num">5</span>;
+<span class="cmt">// console.log(y); // ❌ ReferenceError (let no hoisted)</span>
+<span class="kw">let</span> y = <span class="num">5</span>;</pre></div>
+      </div>
+    </section>
+
+    <!-- TIPOS -->
+    <section id="tipos">
+      <h3>🔢 Tipos de Datos</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> typeof cada tipo</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <button class="demo-btn" onclick="
+              const tipos = [
+                ['string',    typeof 'hola',       '\"hola\"'],
+                ['number',    typeof 42,            '42'],
+                ['boolean',   typeof true,          'true'],
+                ['undefined', typeof undefined,     'undefined'],
+                ['null',      typeof null,          'null (bug: object)'],
+                ['object',    typeof {a:1},         '{a: 1}'],
+                ['array',     typeof [1,2],         '[1,2] (es object!)'],
+                ['function',  typeof function(){},  'function(){}'],
+                ['bigint',    typeof 9007199254740991n, '9007...n'],
+                ['symbol',    typeof Symbol(),      'Symbol()'],
+              ];
+              document.getElementById('out-tipos').textContent =
+                tipos.map(([tipo, res, val]) =>
+                  `typeof ${val.padEnd(18)} → ${res} (${tipo})`
+                ).join('\n');
+            ">▶ Ver tipos</button>
+            <div class="demo-output" id="out-tipos">Haz clic...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// PRIMITIVOS (valor, inmutables)</span>
+<span class="kw">const</span> texto     = <span class="str">"hola mundo"</span>;       <span class="cmt">// string</span>
+<span class="kw">const</span> numero    = <span class="num">42</span>;                  <span class="cmt">// number (int y float son lo mismo)</span>
+<span class="kw">const</span> decimal   = <span class="num">3.14</span>;
+<span class="kw">const</span> booleano  = <span class="kw">true</span>;               <span class="cmt">// boolean</span>
+<span class="kw">const</span> nada      = <span class="kw">null</span>;               <span class="cmt">// null (intencionalmente vacío)</span>
+<span class="kw">let</span>   sinValor;                        <span class="cmt">// undefined (no se asignó)</span>
+<span class="kw">const</span> grande    = <span class="num">9007199254740991n</span>;  <span class="cmt">// bigint (números muy grandes)</span>
+<span class="kw">const</span> unico     = <span class="fn">Symbol</span>(<span class="str">'id'</span>);       <span class="cmt">// symbol (identificador único)</span>
+
+<span class="cmt">// OBJETOS (referencia, mutables)</span>
+<span class="kw">const</span> objeto    = { nombre: <span class="str">'Breyner'</span>, edad: <span class="num">20</span> };
+<span class="kw">const</span> arreglo   = [<span class="num">1</span>, <span class="str">'dos'</span>, <span class="kw">true</span>, <span class="kw">null</span>];
+<span class="kw">const</span> funcion   = <span class="kw">function</span>() {};
+
+<span class="cmt">// CONVERSIÓN DE TIPOS</span>
+<span class="fn">Number</span>(<span class="str">'42'</span>)    <span class="cmt">// → 42</span>
+<span class="fn">String</span>(<span class="num">42</span>)     <span class="cmt">// → '42'</span>
+<span class="fn">Boolean</span>(<span class="num">0</span>)    <span class="cmt">// → false  (falsy: 0, '', null, undefined, NaN)</span>
+<span class="fn">Boolean</span>(<span class="str">'a'</span>) <span class="cmt">// → true   (todo lo demás es truthy)</span>
+parseInt(<span class="str">'42px'</span>)    <span class="cmt">// → 42</span>
+parseFloat(<span class="str">'3.14'</span>) <span class="cmt">// → 3.14</span></pre></div>
+      </div>
+    </section>
+
+    <!-- OPERADORES -->
+    <section id="operadores">
+      <h3>⚙️ Operadores</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> todos los operadores</div>
+        <div class="demo-code"><pre><span class="cmt">// ARITMÉTICOS</span>
+<span class="num">10</span> + <span class="num">3</span>   <span class="cmt">// 13  suma</span>
+<span class="num">10</span> - <span class="num">3</span>   <span class="cmt">// 7   resta</span>
+<span class="num">10</span> * <span class="num">3</span>   <span class="cmt">// 30  multiplicación</span>
+<span class="num">10</span> / <span class="num">3</span>   <span class="cmt">// 3.33 división</span>
+<span class="num">10</span> % <span class="num">3</span>   <span class="cmt">// 1   módulo (resto)</span>
+<span class="num">2</span>  ** <span class="num">8</span>  <span class="cmt">// 256 potencia</span>
+x++       <span class="cmt">// incrementar</span>
+x--       <span class="cmt">// decrementar</span>
+
+<span class="cmt">// COMPARACIÓN</span>
+<span class="num">5</span> == <span class="str">'5'</span>  <span class="cmt">// true  (compara SOLO valor, convierte tipos)</span>
+<span class="num">5</span> === <span class="str">'5'</span> <span class="cmt">// false (compara valor Y tipo) ← usa siempre ===</span>
+<span class="num">5</span> != <span class="str">'6'</span>  <span class="cmt">// true</span>
+<span class="num">5</span> !== <span class="str">'5'</span> <span class="cmt">// true</span>
+<span class="num">5</span> > <span class="num">3</span>    <span class="cmt">// true</span>
+<span class="num">5</span> >= <span class="num">5</span>   <span class="cmt">// true</span>
+
+<span class="cmt">// LÓGICOS</span>
+<span class="kw">true</span> &amp;&amp; <span class="kw">false</span>   <span class="cmt">// false  (AND: ambos deben ser true)</span>
+<span class="kw">true</span> || <span class="kw">false</span>   <span class="cmt">// true   (OR: al menos uno true)</span>
+!<span class="kw">true</span>            <span class="cmt">// false  (NOT: invierte)</span>
+
+<span class="cmt">// NULLISH / OPTIONAL CHAINING (ES2020)</span>
+<span class="kw">const</span> nombre = usuario?.nombre ?? <span class="str">'Anónimo'</span>;
+<span class="cmt">// ?? devuelve derecha solo si izquierda es null/undefined</span>
+<span class="cmt">// ?. accede sin error si es null/undefined</span>
+
+<span class="cmt">// ASIGNACIÓN</span>
+x += <span class="num">5</span>;   <span class="cmt">// x = x + 5</span>
+x -= <span class="num">2</span>;   <span class="cmt">// x = x - 2</span>
+x *= <span class="num">3</span>;   <span class="cmt">// x = x * 3</span>
+x /= <span class="num">4</span>;   <span class="cmt">// x = x / 4</span>
+x ??= <span class="str">'default'</span>;  <span class="cmt">// asigna solo si x es null/undefined</span>
+
+<span class="cmt">// TERNARIO</span>
+<span class="kw">const</span> msg = edad >= <span class="num">18</span> ? <span class="str">'mayor'</span> : <span class="str">'menor'</span>;</pre></div>
+      </div>
+    </section>
+
+    <!-- CONDICIONALES -->
+    <section id="condicionales">
+      <h3>🔀 Condicionales</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — adivina el número</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="num-input" type="number" placeholder="Escribe 1-10" style="border:1px solid #ccc;padding:6px 10px;border-radius:6px;font-size:0.85rem;width:160px"/>
+              <button class="demo-btn" onclick="
+                const val = parseInt(document.getElementById('num-input').value);
+                const secreto = 7;
+                let res;
+                if (isNaN(val)) res = '⚠ Escribe un número';
+                else if (val < 1 || val > 10) res = '⚠ Debe ser entre 1 y 10';
+                else if (val < secreto) res = val + ' → muy bajo 📉';
+                else if (val > secreto) res = val + ' → muy alto 📈';
+                else res = '🎉 ¡Correcto! El número era ' + secreto;
+                document.getElementById('out-cond').textContent = res;
+              ">Adivinar</button>
+            </div>
+            <div class="demo-output" id="out-cond">Escribe un número del 1 al 10...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// IF / ELSE IF / ELSE</span>
+<span class="kw">if</span> (condicion) {
+  <span class="cmt">// ejecuta si condicion es truthy</span>
+} <span class="kw">else if</span> (otraCondicion) {
+  <span class="cmt">// ejecuta si la primera es falsy y esta truthy</span>
+} <span class="kw">else</span> {
+  <span class="cmt">// ejecuta si todas las anteriores son falsy</span>
+}
+
+<span class="cmt">// SWITCH (para múltiples valores exactos)</span>
+<span class="kw">switch</span> (dia) {
+  <span class="kw">case</span> <span class="str">'lunes'</span>:
+  <span class="kw">case</span> <span class="str">'martes'</span>:
+    console.<span class="mtd">log</span>(<span class="str">'día de semana'</span>);
+    <span class="kw">break</span>;
+  <span class="kw">case</span> <span class="str">'sábado'</span>:
+    console.<span class="mtd">log</span>(<span class="str">'fin de semana'</span>);
+    <span class="kw">break</span>;
+  <span class="kw">default</span>:
+    console.<span class="mtd">log</span>(<span class="str">'otro día'</span>);
+}
+
+<span class="cmt">// TERNARIO (una sola línea)</span>
+<span class="kw">const</span> resultado = nota >= <span class="num">60</span> ? <span class="str">'Aprobado'</span> : <span class="str">'Reprobado'</span>;
+
+<span class="cmt">// NULLISH COALESCING</span>
+<span class="kw">const</span> nombre = input || <span class="str">'Anónimo'</span>;   <span class="cmt">// si input es falsy</span>
+<span class="kw">const</span> nombre2 = input ?? <span class="str">'Anónimo'</span>;  <span class="cmt">// si input es null/undefined</span></pre></div>
+      </div>
+    </section>
+
+    <!-- BUCLES -->
+    <section id="bucles">
+      <h3>🔄 Bucles</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — tabla de multiplicar</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="tabla-num" type="number" placeholder="Número" value="3" style="border:1px solid #ccc;padding:6px 10px;border-radius:6px;font-size:0.85rem;width:100px"/>
+              <button class="demo-btn" onclick="
+                const n = parseInt(document.getElementById('tabla-num').value) || 1;
+                const lineas = [];
+                for (let i = 1; i <= 10; i++) {
+                  lineas.push(n + ' × ' + i + ' = ' + (n*i));
+                }
+                document.getElementById('out-bucle').textContent = lineas.join('\n');
+              ">Generar</button>
+            </div>
+            <div class="demo-output" id="out-bucle" style="max-height:160px;overflow-y:auto">Escribe un número...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// FOR (cuántas veces sabes)</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i < <span class="num">10</span>; i++) {
+  console.<span class="mtd">log</span>(i);
+}
+
+<span class="cmt">// WHILE (mientras condición sea true)</span>
+<span class="kw">let</span> i = <span class="num">0</span>;
+<span class="kw">while</span> (i < <span class="num">5</span>) {
+  console.<span class="mtd">log</span>(i);
+  i++;
+}
+
+<span class="cmt">// DO WHILE (ejecuta al menos una vez)</span>
+<span class="kw">do</span> {
+  console.<span class="mtd">log</span>(i);
+  i++;
+} <span class="kw">while</span> (i < <span class="num">5</span>);
+
+<span class="cmt">// FOR...OF (iterar sobre arrays/strings)</span>
+<span class="kw">const</span> frutas = [<span class="str">'mango'</span>, <span class="str">'papaya'</span>, <span class="str">'maracuyá'</span>];
+<span class="kw">for</span> (<span class="kw">const</span> fruta <span class="kw">of</span> frutas) {
+  console.<span class="mtd">log</span>(fruta);
+}
+
+<span class="cmt">// FOR...IN (iterar sobre propiedades de objeto)</span>
+<span class="kw">const</span> persona = { nombre: <span class="str">'Breyner'</span>, ciudad: <span class="str">'Baq'</span> };
+<span class="kw">for</span> (<span class="kw">const</span> clave <span class="kw">in</span> persona) {
+  console.<span class="mtd">log</span>(clave + ': ' + persona[clave]);
+}
+
+<span class="cmt">// BREAK y CONTINUE</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i < <span class="num">10</span>; i++) {
+  <span class="kw">if</span> (i === <span class="num">3</span>) <span class="kw">continue</span>;  <span class="cmt">// salta i=3</span>
+  <span class="kw">if</span> (i === <span class="num">7</span>) <span class="kw">break</span>;     <span class="cmt">// termina en i=7</span>
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- FUNCIONES -->
+    <section id="funciones">
+      <h3>🎯 Funciones</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — calculadora</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <input id="calc-a" type="number" value="10" style="border:1px solid #ccc;padding:6px 8px;border-radius:6px;font-size:0.85rem;width:80px"/>
+              <input id="calc-b" type="number" value="3" style="border:1px solid #ccc;padding:6px 8px;border-radius:6px;font-size:0.85rem;width:80px"/>
+              <button class="demo-btn" onclick="
+                const a = parseFloat(document.getElementById('calc-a').value);
+                const b = parseFloat(document.getElementById('calc-b').value);
+                const sumar = (x, y) => x + y;
+                const restar = (x, y) => x - y;
+                const multiplicar = (x, y) => x * y;
+                const dividir = (x, y) => b !== 0 ? x / y : '⚠ División por 0';
+                const potencia = (x, y) => Math.pow(x, y);
+                document.getElementById('out-fn').textContent =
+                  a + ' + ' + b + ' = ' + sumar(a,b) + '\n' +
+                  a + ' - ' + b + ' = ' + restar(a,b) + '\n' +
+                  a + ' × ' + b + ' = ' + multiplicar(a,b) + '\n' +
+                  a + ' ÷ ' + b + ' = ' + dividir(a,b) + '\n' +
+                  a + ' ^ ' + b + ' = ' + potencia(a,b);
+              ">Calcular</button>
+            </div>
+            <div class="demo-output" id="out-fn">Haz clic...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// DECLARACIÓN (hoisting: se puede llamar antes de declarar)</span>
+<span class="kw">function</span> <span class="fn">saludar</span>(nombre = <span class="str">'mundo'</span>) {
+  <span class="kw">return</span> <span class="str">'Hola, '</span> + nombre;
+}
+
+<span class="cmt">// EXPRESIÓN (no tiene hoisting)</span>
+<span class="kw">const</span> <span class="fn">saludar</span> = <span class="kw">function</span>(nombre) {
+  <span class="kw">return</span> <span class="str">`Hola, ${nombre}`</span>;
+};
+
+<span class="cmt">// ARROW FUNCTION (ES6) ← más usada</span>
+<span class="kw">const</span> <span class="fn">sumar</span> = (a, b) => a + b;           <span class="cmt">// retorno implícito</span>
+<span class="kw">const</span> <span class="fn">elevar</span> = x => x ** <span class="num">2</span>;              <span class="cmt">// 1 param, sin paréntesis</span>
+<span class="kw">const</span> <span class="fn">saludar</span> = (nombre) => {             <span class="cmt">// con bloque</span>
+  <span class="kw">const</span> msg = <span class="str">`Hola ${nombre}!`</span>;
+  <span class="kw">return</span> msg;
+};
+
+<span class="cmt">// PARÁMETROS ESPECIALES</span>
+<span class="kw">function</span> <span class="fn">greet</span>(nombre = <span class="str">'mundo'</span>) {}  <span class="cmt">// default</span>
+<span class="kw">function</span> <span class="fn">suma</span>(...nums) {               <span class="cmt">// rest: agrupa el resto</span>
+  <span class="kw">return</span> nums.<span class="mtd">reduce</span>((a, b) => a + b, <span class="num">0</span>);
+}
+
+<span class="cmt">// CLOSURES (función que recuerda su entorno)</span>
+<span class="kw">function</span> <span class="fn">contador</span>() {
+  <span class="kw">let</span> count = <span class="num">0</span>;
+  <span class="kw">return</span> () => ++count;  <span class="cmt">// recuerda 'count'</span>
+}
+<span class="kw">const</span> incrementar = <span class="fn">contador</span>();
+<span class="fn">incrementar</span>();  <span class="cmt">// 1</span>
+<span class="fn">incrementar</span>();  <span class="cmt">// 2</span>
+
+<span class="cmt">// IIFE (función que se llama a sí misma)</span>
+(<span class="kw">function</span>() {
+  console.<span class="mtd">log</span>(<span class="str">'se ejecuta inmediatamente'</span>);
+})();</pre></div>
+      </div>
+    </section>
+
+    <!-- ARRAYS -->
+    <section id="arrays">
+      <h3>📊 Arrays y sus métodos</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — transforma el array</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <div style="margin-bottom:8px">
+              <p style="font-size:0.8rem;color:#555;margin-bottom:6px">Array original:</p>
+              <div class="array-viz" id="arr-original"></div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="demo-btn" onclick="runArr('filter')">Filter (pares)</button>
+              <button class="demo-btn" onclick="runArr('map')">Map (×2)</button>
+              <button class="demo-btn" onclick="runArr('reduce')">Reduce (suma)</button>
+              <button class="demo-btn" onclick="runArr('sort')">Sort</button>
+            </div>
+            <div class="demo-output" id="out-arr">Elige una operación...</div>
+          </div>
+          <script>
+            const originalArr = [5, 2, 8, 1, 9, 4, 7, 3, 6];
+            const container = document.getElementById('arr-original');
+            originalArr.forEach(n => {
+              const el = document.createElement('div');
+              el.className = 'arr-item'; el.textContent = n;
+              container.appendChild(el);
+            });
+            function runArr(op) {
+              const arr = [...originalArr];
+              let resultado, desc;
+              if (op === 'filter') {
+                resultado = arr.filter(n => n % 2 === 0);
+                desc = 'filter(n => n % 2 === 0) → solo pares:\n[' + resultado.join(', ') + ']';
+              } else if (op === 'map') {
+                resultado = arr.map(n => n * 2);
+                desc = 'map(n => n * 2) → cada elemento ×2:\n[' + resultado.join(', ') + ']';
+              } else if (op === 'reduce') {
+                resultado = arr.reduce((acc, n) => acc + n, 0);
+                desc = 'reduce((acc, n) => acc + n, 0) → suma total:\n' + resultado;
+              } else if (op === 'sort') {
+                resultado = [...arr].sort((a, b) => a - b);
+                desc = 'sort((a,b) => a - b) → ordenado:\n[' + resultado.join(', ') + ']';
+              }
+              document.getElementById('out-arr').textContent = desc;
+            }
+          </script>
+        </div>
+        <div class="demo-code"><pre><span class="kw">const</span> arr = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>];
+
+<span class="cmt">// ACCESO Y MODIFICACIÓN</span>
+arr[<span class="num">0</span>]                  <span class="cmt">// 1 (primer elemento)</span>
+arr.<span class="mtd">length</span>              <span class="cmt">// 5</span>
+arr.<span class="mtd">push</span>(<span class="num">6</span>)              <span class="cmt">// agrega al final → [1,2,3,4,5,6]</span>
+arr.<span class="mtd">pop</span>()               <span class="cmt">// elimina y retorna el último → 6</span>
+arr.<span class="mtd">unshift</span>(<span class="num">0</span>)          <span class="cmt">// agrega al inicio → [0,1,2,3,4,5]</span>
+arr.<span class="mtd">shift</span>()             <span class="cmt">// elimina y retorna el primero → 0</span>
+arr.<span class="mtd">splice</span>(<span class="num">1</span>, <span class="num">2</span>)        <span class="cmt">// elimina 2 desde índice 1</span>
+arr.<span class="mtd">splice</span>(<span class="num">1</span>, <span class="num">0</span>, <span class="str">'a'</span>)  <span class="cmt">// inserta 'a' en índice 1</span>
+
+<span class="cmt">// BÚSQUEDA</span>
+arr.<span class="mtd">indexOf</span>(<span class="num">3</span>)          <span class="cmt">// 2 (posición)</span>
+arr.<span class="mtd">includes</span>(<span class="num">3</span>)        <span class="cmt">// true</span>
+arr.<span class="mtd">find</span>(n => n > <span class="num">3</span>)   <span class="cmt">// primer elemento que cumple</span>
+arr.<span class="mtd">findIndex</span>(n => n > <span class="num">3</span>) <span class="cmt">// índice del primer resultado</span>
+
+<span class="cmt">// ITERACIÓN (los más importantes)</span>
+arr.<span class="mtd">forEach</span>(n => console.<span class="mtd">log</span>(n))    <span class="cmt">// ejecuta función por cada elemento</span>
+arr.<span class="mtd">map</span>(n => n * <span class="num">2</span>)                  <span class="cmt">// crea nuevo array transformado</span>
+arr.<span class="mtd">filter</span>(n => n % <span class="num">2</span> === <span class="num">0</span>)        <span class="cmt">// filtra elementos</span>
+arr.<span class="mtd">reduce</span>((acc, n) => acc + n, <span class="num">0</span>)  <span class="cmt">// reduce a un valor</span>
+arr.<span class="mtd">some</span>(n => n > <span class="num">4</span>)               <span class="cmt">// true si alguno cumple</span>
+arr.<span class="mtd">every</span>(n => n > <span class="num">0</span>)              <span class="cmt">// true si todos cumplen</span>
+arr.<span class="mtd">sort</span>((a, b) => a - b)           <span class="cmt">// ordena (modifica original)</span>
+
+<span class="cmt">// CREACIÓN DE COPIAS (sin mutar)</span>
+arr.<span class="mtd">slice</span>(<span class="num">1</span>, <span class="num">3</span>)          <span class="cmt">// copia de índice 1 a 2</span>
+[...arr]                  <span class="cmt">// copia completa con spread</span>
+arr.<span class="mtd">concat</span>([<span class="num">6</span>, <span class="num">7</span>])       <span class="cmt">// une arrays</span>
+arr.<span class="mtd">flat</span>()               <span class="cmt">// aplana arrays anidados</span>
+
+<span class="cmt">// DESESTRUCTURACIÓN</span>
+<span class="kw">const</span> [primero, segundo, ...resto] = arr;
+<span class="cmt">// primero=1, segundo=2, resto=[3,4,5]</span></pre></div>
+      </div>
+    </section>
+
+    <!-- OBJETOS -->
+    <section id="objetos">
+      <h3>🏗️ Objetos</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> objetos en profundidad</div>
+        <div class="demo-code"><pre><span class="cmt">// CREACIÓN</span>
+<span class="kw">const</span> persona = {
+  nombre: <span class="str">'Breyner'</span>,
+  edad: <span class="num">20</span>,
+  ciudad: <span class="str">'Barranquilla'</span>,
+  hobbies: [<span class="str">'música'</span>, <span class="str">'anime'</span>, <span class="str">'código'</span>],
+  saludar() {            <span class="cmt">// método shorthand</span>
+    <span class="kw">return</span> <span class="str">`Hola, soy ${<span class="kw">this</span>.nombre}`</span>;
+  }
+};
+
+<span class="cmt">// ACCESO</span>
+persona.nombre             <span class="cmt">// 'Breyner' (dot notation)</span>
+persona[<span class="str">'nombre'</span>]         <span class="cmt">// 'Breyner' (bracket notation)</span>
+<span class="kw">const</span> clave = <span class="str">'edad'</span>; persona[clave]  <span class="cmt">// dinámico</span>
+
+<span class="cmt">// MODIFICAR</span>
+persona.email = <span class="str">'b@mail.com'</span>;  <span class="cmt">// agregar propiedad</span>
+persona.edad = <span class="num">21</span>;             <span class="cmt">// modificar</span>
+<span class="kw">delete</span> persona.ciudad;         <span class="cmt">// eliminar</span>
+
+<span class="cmt">// DESESTRUCTURACIÓN</span>
+<span class="kw">const</span> { nombre, edad, ciudad = <span class="str">'desconocida'</span> } = persona;
+<span class="kw">const</span> { nombre: miNombre } = persona; <span class="cmt">// renombrar</span>
+
+<span class="cmt">// SPREAD (clonar / mezclar)</span>
+<span class="kw">const</span> copia = { ...persona };
+<span class="kw">const</span> extendido = { ...persona, email: <span class="str">'nuevo@mail.com'</span> };
+
+<span class="cmt">// MÉTODOS DEL OBJETO Object</span>
+Object.<span class="mtd">keys</span>(persona)      <span class="cmt">// ['nombre', 'edad', ...]</span>
+Object.<span class="mtd">values</span>(persona)    <span class="cmt">// ['Breyner', 20, ...]</span>
+Object.<span class="mtd">entries</span>(persona)  <span class="cmt">// [['nombre','Breyner'], ...]</span>
+Object.<span class="mtd">assign</span>({}, persona, { edad: <span class="num">21</span> }) <span class="cmt">// mezcla</span>
+Object.<span class="mtd">freeze</span>(persona)   <span class="cmt">// hace inmutable</span>
+
+<span class="cmt">// VERIFICAR PROPIEDAD</span>
+<span class="str">'nombre'</span> <span class="kw">in</span> persona        <span class="cmt">// true</span>
+persona.<span class="mtd">hasOwnProperty</span>(<span class="str">'nombre'</span>) <span class="cmt">// true</span></pre></div>
+      </div>
+    </section>
+
+    <!-- DOM -->
+    <section id="dom">
+      <h3>🌲 Manipulación del DOM</h3>
+      <p>El DOM (Document Object Model) es la representación del HTML en JavaScript.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo DOM interactivo</div>
+        <div class="demo-preview">
+          <div id="dom-caja">Soy un elemento del DOM. ¡Modifícame con los botones!</div>
+          <div class="dom-btns" style="margin-top:10px">
+            <button class="demo-btn" onclick="document.getElementById('dom-caja').textContent = '¡Texto cambiado con textContent!'">Cambiar texto</button>
+            <button class="demo-btn" onclick="document.getElementById('dom-caja').style.background='#ffeb3b';document.getElementById('dom-caja').style.color='#111'">Cambiar color</button>
+            <button class="demo-btn" onclick="document.getElementById('dom-caja').classList.toggle('resaltado');document.getElementById('dom-caja').style.fontWeight=document.getElementById('dom-caja').style.fontWeight==='bold'?'normal':'bold'">Toggle bold</button>
+            <button class="demo-btn" onclick="const p=document.createElement('p');p.textContent='Nodo creado con JS';document.getElementById('dom-caja').appendChild(p)">Agregar nodo</button>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// SELECCIONAR ELEMENTOS</span>
+document.<span class="mtd">getElementById</span>(<span class="str">'mi-id'</span>)       <span class="cmt">// por ID (único)</span>
+document.<span class="mtd">querySelector</span>(<span class="str">'.clase'</span>)       <span class="cmt">// primero que coincida</span>
+document.<span class="mtd">querySelectorAll</span>(<span class="str">'p'</span>)          <span class="cmt">// todos (NodeList)</span>
+document.<span class="mtd">getElementsByClassName</span>(<span class="str">'clase'</span>) <span class="cmt">// colección viva</span>
+
+<span class="cmt">// LEER / ESCRIBIR CONTENIDO</span>
+el.<span class="mtd">textContent</span>          <span class="cmt">// texto plano (más seguro)</span>
+el.<span class="mtd">innerHTML</span>             <span class="cmt">// HTML interno (cuidado XSS)</span>
+el.<span class="mtd">value</span>                 <span class="cmt">// valor de inputs</span>
+el.<span class="mtd">getAttribute</span>(<span class="str">'src'</span>)   <span class="cmt">// leer atributo</span>
+el.<span class="mtd">setAttribute</span>(<span class="str">'src'</span>, <span class="str">'nueva.jpg'</span>) <span class="cmt">// escribir atributo</span>
+
+<span class="cmt">// ESTILOS</span>
+el.style.<span class="mtd">color</span> = <span class="str">'red'</span>;
+el.style.<span class="mtd">backgroundColor</span> = <span class="str">'#fff'</span>;  <span class="cmt">// camelCase</span>
+
+<span class="cmt">// CLASES</span>
+el.classList.<span class="mtd">add</span>(<span class="str">'activo'</span>);
+el.classList.<span class="mtd">remove</span>(<span class="str">'activo'</span>);
+el.classList.<span class="mtd">toggle</span>(<span class="str">'activo'</span>);
+el.classList.<span class="mtd">contains</span>(<span class="str">'activo'</span>); <span class="cmt">// boolean</span>
+
+<span class="cmt">// CREAR Y AGREGAR NODOS</span>
+<span class="kw">const</span> div = document.<span class="mtd">createElement</span>(<span class="str">'div'</span>);
+div.textContent = <span class="str">'Nuevo elemento'</span>;
+div.className = <span class="str">'tarjeta'</span>;
+document.body.<span class="mtd">appendChild</span>(div);       <span class="cmt">// al final</span>
+padre.<span class="mtd">insertBefore</span>(div, referencia);   <span class="cmt">// antes de un elemento</span>
+el.<span class="mtd">remove</span>();                           <span class="cmt">// eliminar elemento</span>
+
+<span class="cmt">// NAVEGAR EL DOM</span>
+el.<span class="mtd">parentElement</span>      <span class="cmt">// padre</span>
+el.<span class="mtd">children</span>           <span class="cmt">// hijos (elementos)</span>
+el.<span class="mtd">nextElementSibling</span> <span class="cmt">// hermano siguiente</span></pre></div>
+      </div>
+    </section>
+
+    <!-- EVENTOS -->
+    <section id="eventos">
+      <h3>🎮 Eventos</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — captura de eventos</div>
+        <div class="demo-preview">
+          <div id="event-box">Interactúa aquí (click, doble clic, teclas...)</div>
+          <div class="demo-output" id="out-event" style="margin-top:8px">Esperando eventos...</div>
+          <script>
+            const box = document.getElementById('event-box');
+            const evOut = document.getElementById('out-event');
+            box.addEventListener('click',      () => evOut.textContent = '🖱 click detectado');
+            box.addEventListener('dblclick',   () => evOut.textContent = '🖱🖱 doble clic detectado');
+            box.addEventListener('mouseenter', () => evOut.textContent = '👆 mouse entró');
+            box.addEventListener('mouseleave', () => evOut.textContent = '👋 mouse salió');
+            document.addEventListener('keydown', (e) => {
+              evOut.textContent = '⌨ Tecla presionada: ' + e.key + ' (código: ' + e.code + ')';
+            });
+          </script>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// ESCUCHAR UN EVENTO</span>
+<span class="kw">const</span> btn = document.<span class="mtd">querySelector</span>(<span class="str">'button'</span>);
+btn.<span class="mtd">addEventListener</span>(<span class="str">'click'</span>, (evento) => {
+  console.<span class="mtd">log</span>(<span class="str">'hiciste click!'</span>);
+  console.<span class="mtd">log</span>(evento.target);     <span class="cmt">// elemento que disparó</span>
+  evento.<span class="mtd">preventDefault</span>();       <span class="cmt">// evita comportamiento default</span>
+  evento.<span class="mtd">stopPropagation</span>();      <span class="cmt">// detiene la propagación</span>
+});
+
+<span class="cmt">// REMOVER EVENTO</span>
+<span class="kw">const</span> <span class="fn">handler</span> = () => {};
+btn.<span class="mtd">addEventListener</span>(<span class="str">'click'</span>, handler);
+btn.<span class="mtd">removeEventListener</span>(<span class="str">'click'</span>, handler);
+
+<span class="cmt">// EVENTOS DE MOUSE</span>
+<span class="str">'click'</span> <span class="str">'dblclick'</span> <span class="str">'mousedown'</span> <span class="str">'mouseup'</span>
+<span class="str">'mouseenter'</span> <span class="str">'mouseleave'</span> <span class="str">'mousemove'</span>
+<span class="str">'contextmenu'</span>
+
+<span class="cmt">// EVENTOS DE TECLADO</span>
+document.<span class="mtd">addEventListener</span>(<span class="str">'keydown'</span>, (e) => {
+  console.<span class="mtd">log</span>(e.key, e.code, e.ctrlKey, e.shiftKey);
+});
+<span class="str">'keydown'</span> <span class="str">'keyup'</span> <span class="str">'keypress'</span>
+
+<span class="cmt">// EVENTOS DE FORMULARIO</span>
+input.<span class="mtd">addEventListener</span>(<span class="str">'input'</span>, (e) => console.<span class="mtd">log</span>(e.target.value));
+form.<span class="mtd">addEventListener</span>(<span class="str">'submit'</span>, (e) => {
+  e.<span class="mtd">preventDefault</span>(); <span class="cmt">// evita recargar la página</span>
+});
+<span class="str">'change'</span> <span class="str">'focus'</span> <span class="str">'blur'</span>
+
+<span class="cmt">// EVENTOS DE VENTANA</span>
+window.<span class="mtd">addEventListener</span>(<span class="str">'load'</span>, () => {});
+window.<span class="mtd">addEventListener</span>(<span class="str">'resize'</span>, () => {});
+window.<span class="mtd">addEventListener</span>(<span class="str">'scroll'</span>, () => {});
+document.<span class="mtd">addEventListener</span>(<span class="str">'DOMContentLoaded'</span>, () => {});</pre></div>
+      </div>
+    </section>
+
+    <!-- ASYNC -->
+    <section id="async">
+      <h3>⏳ Async / Promesas</h3>
+      <p>JavaScript es single-thread. Las promesas y async/await manejan operaciones asíncronas (peticiones, timers, archivos).</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — setTimeout y Promesa</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <button class="demo-btn" onclick="
+              const out = document.getElementById('out-async');
+              out.textContent = '⏳ Iniciando... (espera 2 segundos)';
+              new Promise((resolve) => {
+                setTimeout(() => resolve('✅ Promesa resuelta después de 2s'), 2000);
+              }).then(msg => { out.textContent = msg; });
+            ">Ejecutar promesa (2s)</button>
+            <div class="demo-output" id="out-async">Haz clic...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// PROMISES</span>
+<span class="kw">const</span> promesa = <span class="kw">new</span> <span class="fn">Promise</span>((resolve, reject) => {
+  <span class="kw">const</span> exito = <span class="kw">true</span>;
+  <span class="kw">if</span> (exito) <span class="fn">resolve</span>(<span class="str">'¡Funcionó!'</span>);
+  <span class="kw">else</span>       <span class="fn">reject</span>(<span class="kw">new</span> <span class="fn">Error</span>(<span class="str">'Algo falló'</span>));
+});
+
+promesa
+  .<span class="mtd">then</span>(resultado => console.<span class="mtd">log</span>(resultado))
+  .<span class="mtd">catch</span>(error    => console.<span class="mtd">error</span>(error))
+  .<span class="mtd">finally</span>(()    => console.<span class="mtd">log</span>(<span class="str">'siempre ejecuta'</span>));
+
+<span class="cmt">// ASYNC / AWAIT (syntactic sugar sobre promesas)</span>
+<span class="kw">async function</span> <span class="fn">obtenerDatos</span>() {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> resultado = <span class="kw">await</span> promesaQueTardaUnRato();
+    console.<span class="mtd">log</span>(resultado);
+  } <span class="kw">catch</span> (error) {
+    console.<span class="mtd">error</span>(error);
+  }
+}
+
+<span class="cmt">// PROMESAS EN PARALELO</span>
+<span class="kw">const</span> [r1, r2] = <span class="kw">await</span> Promise.<span class="mtd">all</span>([promesa1, promesa2]);
+<span class="kw">const</span> primero  = <span class="kw">await</span> Promise.<span class="mtd">race</span>([p1, p2]);
+<span class="kw">const</span> resultados = <span class="kw">await</span> Promise.<span class="mtd">allSettled</span>([p1, p2]);
+
+<span class="cmt">// TIMERS</span>
+<span class="fn">setTimeout</span>(() => {}, <span class="num">2000</span>);          <span class="cmt">// ejecuta una vez tras 2s</span>
+<span class="kw">const</span> id = <span class="fn">setInterval</span>(() => {}, <span class="num">1000</span>); <span class="cmt">// repite cada 1s</span>
+<span class="fn">clearInterval</span>(id);                   <span class="cmt">// detiene el intervalo</span></pre></div>
+      </div>
+    </section>
+
+    <!-- FETCH -->
+    <section id="fetch">
+      <h3>🌐 Fetch API</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo — petición real a API pública</div>
+        <div class="demo-preview">
+          <div class="interactive">
+            <button class="demo-btn" onclick="
+              const out = document.getElementById('fetch-result');
+              out.textContent = '⏳ Cargando...';
+              fetch('https://rickandmortyapi.com/api/character/1')
+                .then(r => r.json())
+                .then(data => {
+                  out.textContent =
+                    'Nombre: ' + data.name + '\n' +
+                    'Estado: ' + data.status + '\n' +
+                    'Especie: ' + data.species + '\n' +
+                    'Origen: ' + data.origin.name;
+                })
+                .catch(err => out.textContent = '❌ Error: ' + err.message);
+            ">Fetch Rick Sanchez</button>
+            <div id="fetch-result">Haz clic para hacer la petición...</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// GET (obtener datos)</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'https://api.ejemplo.com/datos'</span>);
+<span class="kw">const</span> data = <span class="kw">await</span> res.<span class="mtd">json</span>();
+
+<span class="cmt">// POST (enviar datos)</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/usuarios'</span>, {
+  method: <span class="str">'POST'</span>,
+  headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+  body: JSON.<span class="mtd">stringify</span>({ nombre: <span class="str">'Breyner'</span>, edad: <span class="num">20</span> })
+});
+
+<span class="cmt">// MANEJO DE ERRORES</span>
+<span class="kw">async function</span> <span class="fn">getData</span>(url) {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(url);
+    <span class="kw">if</span> (!res.<span class="mtd">ok</span>) <span class="kw">throw new</span> <span class="fn">Error</span>(<span class="str">`HTTP ${res.status}`</span>);
+    <span class="kw">return await</span> res.<span class="mtd">json</span>();
+  } <span class="kw">catch</span> (err) {
+    console.<span class="mtd">error</span>(<span class="str">'Error:'</span>, err);
+  }
+}
+
+<span class="cmt">// RESPONSE METHODS</span>
+res.<span class="mtd">json</span>()   <span class="cmt">// parsea JSON</span>
+res.<span class="mtd">text</span>()   <span class="cmt">// texto plano</span>
+res.<span class="mtd">blob</span>()   <span class="cmt">// datos binarios (imágenes)</span>
+res.<span class="mtd">ok</span>       <span class="cmt">// true si status 200-299</span>
+res.<span class="mtd">status</span>   <span class="cmt">// código HTTP (200, 404, 500...)</span></pre></div>
+      </div>
+    </section>
+
+    <!-- STORAGE -->
+    <section id="storage">
+      <h3>💾 Web Storage</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo localStorage</div>
+        <div class="demo-preview">
+          <div class="storage-demo">
+            <div class="row">
+              <input id="store-key" placeholder="clave" style="width:120px"/>
+              <input id="store-val" placeholder="valor"/>
+            </div>
+            <div class="row">
+              <button class="demo-btn" onclick="
+                const k = document.getElementById('store-key').value;
+                const v = document.getElementById('store-val').value;
+                if (k) { localStorage.setItem(k, v); updateStorage(); }
+              ">Guardar</button>
+              <button class="demo-btn" onclick="
+                const k = document.getElementById('store-key').value;
+                if (k) { localStorage.removeItem(k); updateStorage(); }
+              ">Borrar clave</button>
+              <button class="demo-btn" onclick="localStorage.clear(); updateStorage()">Borrar todo</button>
+            </div>
+            <div class="demo-output" id="out-storage">localStorage vacío...</div>
+          </div>
+          <script>
+            function updateStorage() {
+              const out = document.getElementById('out-storage');
+              if (localStorage.length === 0) { out.textContent = 'localStorage vacío...'; return; }
+              out.textContent = Object.keys(localStorage).map(k => k + ': ' + localStorage.getItem(k)).join('\n');
+            }
+            updateStorage();
+          </script>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">// localStorage — persiste entre sesiones</span>
+localStorage.<span class="mtd">setItem</span>(<span class="str">'usuario'</span>, <span class="str">'Breyner'</span>);
+localStorage.<span class="mtd">getItem</span>(<span class="str">'usuario'</span>);           <span class="cmt">// 'Breyner'</span>
+localStorage.<span class="mtd">removeItem</span>(<span class="str">'usuario'</span>);
+localStorage.<span class="mtd">clear</span>();                      <span class="cmt">// borra todo</span>
+localStorage.<span class="mtd">length</span>;                       <span class="cmt">// cantidad de keys</span>
+
+<span class="cmt">// Solo guarda strings — serializar objetos con JSON</span>
+<span class="kw">const</span> obj = { nombre: <span class="str">'Breyner'</span>, nivel: <span class="num">5</span> };
+localStorage.<span class="mtd">setItem</span>(<span class="str">'perfil'</span>, JSON.<span class="mtd">stringify</span>(obj));
+<span class="kw">const</span> perfil = JSON.<span class="mtd">parse</span>(localStorage.<span class="mtd">getItem</span>(<span class="str">'perfil'</span>));
+
+<span class="cmt">// sessionStorage — se borra al cerrar la pestaña</span>
+sessionStorage.<span class="mtd">setItem</span>(<span class="str">'token'</span>, <span class="str">'abc123'</span>);
+sessionStorage.<span class="mtd">getItem</span>(<span class="str">'token'</span>);
+sessionStorage.<span class="mtd">clear</span>();
+
+<span class="cmt">// Diferencias</span>
+<span class="cmt">// localStorage:   persiste indefinidamente</span>
+<span class="cmt">// sessionStorage: solo dura la sesión del tab</span>
+<span class="cmt">// cookies:        para enviar al servidor, tienen expiración</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ES6+ -->
+    <section id="es6">
+      <h3>🚀 ES6+ — Características Modernas</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> lo más importante de ES6 en adelante</div>
+        <div class="demo-code"><pre><span class="cmt">// TEMPLATE LITERALS</span>
+<span class="kw">const</span> msg = <span class="str">`Hola ${nombre}, tienes ${edad} años`</span>;
+<span class="kw">const</span> html = <span class="str">`
+  &lt;div class="card"&gt;
+    &lt;h2&gt;${titulo}&lt;/h2&gt;
+  &lt;/div&gt;
+`</span>;
+
+<span class="cmt">// DESESTRUCTURACIÓN</span>
+<span class="kw">const</span> { a, b, ...resto } = objeto;       <span class="cmt">// objetos</span>
+<span class="kw">const</span> [x, y, ...otros] = array;          <span class="cmt">// arrays</span>
+<span class="kw">const</span> { nombre: alias = <span class="str">'default'</span> } = obj; <span class="cmt">// renombrar + default</span>
+
+<span class="cmt">// SPREAD OPERATOR</span>
+<span class="kw">const</span> nuevoArr = [...arr1, ...arr2];
+<span class="kw">const</span> nuevoObj = { ...obj1, ...obj2, extra: <span class="str">'valor'</span> };
+<span class="fn">max</span>(...numeros);  <span class="cmt">// pasar array como argumentos</span>
+
+<span class="cmt">// MODULES (export / import)</span>
+<span class="kw">export const</span> PI = <span class="num">3.14</span>;             <span class="cmt">// named export</span>
+<span class="kw">export default function</span> <span class="fn">main</span>() {}   <span class="cmt">// default export</span>
+<span class="kw">import</span> { PI } <span class="kw">from</span> <span class="str">'./math.js'</span>;
+<span class="kw">import</span> main <span class="kw">from</span> <span class="str">'./app.js'</span>;
+
+<span class="cmt">// CLASSES</span>
+<span class="kw">class</span> <span class="fn">Animal</span> {
+  <span class="fn">constructor</span>(nombre) { <span class="kw">this</span>.nombre = nombre; }
+  <span class="fn">hablar</span>() { <span class="kw">return</span> <span class="str">`${<span class="kw">this</span>.nombre} hace un sonido`</span>; }
+  <span class="kw">static</span> <span class="fn">crear</span>(n) { <span class="kw">return new</span> <span class="fn">Animal</span>(n); }  <span class="cmt">// método estático</span>
+}
+<span class="kw">class</span> <span class="fn">Perro</span> <span class="kw">extends</span> <span class="fn">Animal</span> {
+  <span class="fn">hablar</span>() { <span class="kw">return</span> <span class="str">`${<span class="kw">this</span>.nombre} ladra`</span>; }
+}
+
+<span class="cmt">// MAP y SET</span>
+<span class="kw">const</span> mapa = <span class="kw">new</span> <span class="fn">Map</span>();
+mapa.<span class="mtd">set</span>(<span class="str">'clave'</span>, <span class="str">'valor'</span>);
+mapa.<span class="mtd">get</span>(<span class="str">'clave'</span>);
+
+<span class="kw">const</span> conjunto = <span class="kw">new</span> <span class="fn">Set</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>]);  <span class="cmt">// {1, 2, 3} - sin duplicados</span>
+<span class="kw">const</span> sinDuplicados = [...<span class="kw">new</span> <span class="fn">Set</span>(array)]; <span class="cmt">// eliminar duplicados</span>
+
+<span class="cmt">// OPTIONAL CHAINING + NULLISH</span>
+usuario?.perfil?.avatar?.url ?? <span class="str">'default.jpg'</span>
+
+<span class="cmt">// LOGICAL ASSIGNMENT</span>
+x ||= <span class="str">'default'</span>;  <span class="cmt">// x = x || 'default'</span>
+x &&= valor;       <span class="cmt">// x = x && valor</span>
+x ??= <span class="str">'default'</span>;  <span class="cmt">// x = x ?? 'default'</span></pre></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

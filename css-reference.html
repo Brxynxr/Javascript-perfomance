@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS — Referencia Completa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #040d12;
+      --surface: #091520;
+      --surface2: #0f1f2c;
+      --border: #162432;
+      --text: #e0f0f8;
+      --muted: #4a7a98;
+      --accent: #4fc3f7;
+      --accent2: #81d4fa;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+    nav .title { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); margin-left: auto; font-size: 1.1rem; }
+
+    .layout { display: flex; }
+    aside {
+      width: 220px; border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      position: sticky; top: 53px; height: calc(100vh - 53px); overflow-y: auto;
+    }
+    aside h3 { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; padding: 0.5rem 1.5rem; margin-bottom: 0.25rem; font-family: 'DM Mono', monospace; }
+    aside a { display: block; padding: 0.35rem 1.5rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent; }
+    aside a:hover { color: var(--accent); border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, transparent); }
+
+    main { flex: 1; padding: 3rem 4rem; max-width: 920px; }
+    .section-header { margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .section-header h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+    .section-header p { color: var(--muted); font-size: 0.9rem; }
+    section { margin-bottom: 4rem; scroll-margin-top: 70px; }
+    h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; color: var(--accent2); margin-bottom: 1rem; margin-top: 2rem; }
+    p { color: color-mix(in srgb, var(--text) 65%, transparent); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem; }
+
+    .demo-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 1.5rem; }
+    .demo-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; padding: 0.5rem 1rem; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; gap: 0.5rem; align-items: center; }
+    .demo-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .demo-label .dot.preview { background: #4ade80; }
+    .demo-label .dot.code   { background: var(--accent); }
+    .demo-preview { padding: 1.5rem; background: #f8f9fa; color: #111; }
+    .demo-code { background: #03080d; padding: 1.25rem; overflow-x: auto; }
+    .demo-code pre { font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 1.6; color: #90caf9; }
+    .demo-code .prop  { color: #4fc3f7; }
+    .demo-code .val   { color: #80deea; }
+    .demo-code .sel   { color: #ce93d8; }
+    .demo-code .cmt   { color: #1e4060; }
+    .demo-code .str   { color: #a5d6a7; }
+
+    /* ---- SELECTOR DEMOS ---- */
+    .sel-demo { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .sel-demo .box { padding: 0.5rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; }
+
+    /* ---- BOX MODEL VISUAL ---- */
+    .boxmodel-wrap { display: flex; align-items: center; justify-content: center; padding: 1rem; background: #f8f9fa; }
+    .margin-box { background: #ffd0a0; padding: 20px; display: inline-block; font-size: 0.7rem; text-align: center; }
+    .border-box2 { background: #fff; border: 4px solid #ff6b35; padding: 16px; display: inline-block; }
+    .padding-box { background: #c8e6c9; padding: 12px; display: inline-block; }
+    .content-box2 { background: #90caf9; padding: 8px 16px; display: inline-block; font-size: 0.8rem; font-weight: bold; }
+    .label-m { color: #b35700; }
+    .label-b { color: #ff6b35; }
+    .label-p { color: #2e7d32; }
+
+    /* ---- FLEXBOX DEMO ---- */
+    .flex-demo { display: flex; gap: 8px; padding: 0.5rem; background: #e3f2fd; border-radius: 6px; }
+    .flex-item { background: #1976d2; color: white; padding: 10px 14px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+    .flex-item.grow { flex-grow: 1; }
+
+    /* ---- GRID DEMO ---- */
+    .grid-demo { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 8px; padding: 0.5rem; background: #e8f5e9; border-radius: 6px; }
+    .grid-item { background: #2e7d32; color: white; padding: 14px 8px; text-align: center; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+    .grid-item.span2 { grid-column: span 2; }
+
+    /* ---- COLORS ---- */
+    .color-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+    .swatch { width: 60px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 600; }
+
+    /* ---- POSITION DEMO ---- */
+    .pos-container { position: relative; height: 120px; background: #e3f2fd; border-radius: 6px; overflow: hidden; }
+    .pos-box { padding: 6px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .pos-static   { position: static;   background: #bbdefb; color: #0d47a1; }
+    .pos-relative { position: relative; top: 20px; left: 10px; background: #1976d2; color: white; }
+    .pos-absolute { position: absolute; bottom: 10px; right: 10px; background: #d32f2f; color: white; }
+
+    /* ---- TRANSITIONS ---- */
+    .transition-btn {
+      padding: 10px 20px; background: #4fc3f7; color: #000; border: none; border-radius: 8px;
+      cursor: pointer; font-size: 0.85rem; font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .transition-btn:hover { background: #ff6b35; color: white; transform: scale(1.1) rotate(-2deg); box-shadow: 0 8px 20px rgba(255,107,53,0.4); }
+
+    /* ---- ANIMATION ---- */
+    @keyframes bounce { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-20px); } }
+    @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%,100%{ opacity:1; transform: scale(1); } 50%{ opacity:0.5; transform: scale(0.9); } }
+    .anim-demo { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; padding: 1rem; }
+    .anim-box { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: white; font-weight: 700; }
+    .bounce { background: #ff6b35; animation: bounce 1s ease-in-out infinite; }
+    .spin   { background: #4fc3f7; animation: spin 2s linear infinite; }
+    .pulse  { background: #ce93d8; animation: pulse 1.5s ease-in-out infinite; }
+
+    /* ---- PSEUDO DEMO ---- */
+    .pseudo-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .pseudo-list li {
+      padding: 8px 12px; background: #e3f2fd; border-radius: 6px;
+      font-size: 0.85rem; cursor: pointer; transition: background 0.2s;
+    }
+    .pseudo-list li:hover { background: #4fc3f7; color: white; }
+    .pseudo-list li:first-child { background: #90caf9; font-weight: bold; }
+    .pseudo-list li:last-child  { background: #bbdefb; }
+    .pseudo-list li:nth-child(2){ background: #b3e5fc; }
+
+    /* ---- CUSTOM PROPS ---- */
+    .custom-props-demo {
+      --btn-color: #4fc3f7;
+      --btn-radius: 20px;
+      display: flex; gap: 1rem;
+    }
+    .custom-btn {
+      background: var(--btn-color); border: none; padding: 8px 18px;
+      border-radius: var(--btn-radius); cursor: pointer; font-size: 0.85rem; font-weight: 600;
+    }
+    .custom-btn.variant { --btn-color: #ff6b35; --btn-radius: 4px; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html">← Inicio</a>
+  <a href="html-reference.html">HTML</a>
+  <a href="js-reference.html">JS</a>
+  <span class="title">CSS Reference</span>
+</nav>
+
+<div class="layout">
+  <aside>
+    <h3>Secciones</h3>
+    <a href="#selectores">Selectores</a>
+    <a href="#boxmodel">Box Model</a>
+    <a href="#display">Display</a>
+    <a href="#flexbox">Flexbox</a>
+    <a href="#grid">Grid</a>
+    <a href="#posicion">Posicionamiento</a>
+    <a href="#colores">Colores</a>
+    <a href="#tipografia">Tipografía</a>
+    <a href="#transiciones">Transiciones</a>
+    <a href="#animaciones">Animaciones</a>
+    <a href="#pseudos">Pseudo-clases</a>
+    <a href="#variables">Variables CSS</a>
+    <a href="#responsive">Responsive</a>
+  </aside>
+
+  <main>
+    <div class="section-header">
+      <h2>🎨 CSS Reference</h2>
+      <p>Selectores, layouts, animaciones, variables y todo lo que puedes hacer con CSS.</p>
+    </div>
+
+    <!-- SELECTORES -->
+    <section id="selectores">
+      <h3>🎯 Selectores</h3>
+      <p>Los selectores determinan a qué elementos HTML se aplican los estilos.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> tipos de selectores</div>
+        <div class="demo-code"><pre><span class="cmt">/* ═══ SELECTORES BÁSICOS ═══ */</span>
+<span class="sel">*</span>               { <span class="prop">box-sizing</span>: <span class="val">border-box</span>; }  <span class="cmt">/* todos los elementos */</span>
+<span class="sel">p</span>               { <span class="prop">color</span>: <span class="val">red</span>; }               <span class="cmt">/* por etiqueta */</span>
+<span class="sel">.clase</span>          { <span class="prop">color</span>: <span class="val">blue</span>; }              <span class="cmt">/* por clase */</span>
+<span class="sel">#id-unico</span>       { <span class="prop">color</span>: <span class="val">green</span>; }             <span class="cmt">/* por ID (único) */</span>
+<span class="sel">input[type="text"]</span>{ <span class="prop">border</span>: <span class="val">1px solid</span>; }       <span class="cmt">/* por atributo */</span>
+
+<span class="cmt">/* ═══ COMBINADORES ═══ */</span>
+<span class="sel">div p</span>           { }   <span class="cmt">/* descendiente (cualquier nivel) */</span>
+<span class="sel">div > p</span>         { }   <span class="cmt">/* hijo directo */</span>
+<span class="sel">h2 + p</span>          { }   <span class="cmt">/* hermano adyacente (inmediato) */</span>
+<span class="sel">h2 ~ p</span>          { }   <span class="cmt">/* todos los hermanos siguientes */</span>
+
+<span class="cmt">/* ═══ AGRUPACIÓN ═══ */</span>
+<span class="sel">h1, h2, h3</span>      { <span class="prop">font-family</span>: <span class="val">sans-serif</span>; }
+
+<span class="cmt">/* ═══ ESPECIFICIDAD (de mayor a menor) ═══ */</span>
+<span class="cmt">/* inline style > #id > .clase > etiqueta */</span>
+<span class="sel">#btn.active:hover</span>{ }  <span class="cmt">/* combinación de selectores */</span></pre></div>
+      </div>
+    </section>
+
+    <!-- BOX MODEL -->
+    <section id="boxmodel">
+      <h3>📦 Box Model</h3>
+      <p>Todo elemento HTML es una caja. El modelo de caja define sus 4 capas.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> visualización del box model</div>
+        <div class="boxmodel-wrap">
+          <div class="margin-box">
+            <span class="label-m">margin</span>
+            <div class="border-box2">
+              <span class="label-b">border</span>
+              <div class="padding-box">
+                <span class="label-p">padding</span>
+                <div class="content-box2">CONTENT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="sel">.caja</span> {
+  <span class="cmt">/* CONTENIDO */</span>
+  <span class="prop">width</span>: <span class="val">200px</span>;
+  <span class="prop">height</span>: <span class="val">100px</span>;
+
+  <span class="cmt">/* PADDING — espacio interno */</span>
+  <span class="prop">padding</span>: <span class="val">20px</span>;                <span class="cmt">/* todos lados */</span>
+  <span class="prop">padding</span>: <span class="val">10px 20px</span>;           <span class="cmt">/* vertical horizontal */</span>
+  <span class="prop">padding</span>: <span class="val">10px 15px 20px 5px</span>;  <span class="cmt">/* top right bottom left */</span>
+
+  <span class="cmt">/* BORDER */</span>
+  <span class="prop">border</span>: <span class="val">2px solid #333</span>;
+  <span class="prop">border-radius</span>: <span class="val">8px</span>;
+  <span class="prop">border-top</span>: <span class="val">3px dashed red</span>;
+
+  <span class="cmt">/* MARGIN — espacio externo */</span>
+  <span class="prop">margin</span>: <span class="val">20px</span>;
+  <span class="prop">margin</span>: <span class="val">0 auto</span>;   <span class="cmt">/* centrar horizontalmente */</span>
+
+  <span class="cmt">/* box-sizing: cambia cómo se calcula el ancho total */</span>
+  <span class="prop">box-sizing</span>: <span class="val">border-box</span>;   <span class="cmt">/* width INCLUYE padding+border */</span>
+  <span class="prop">box-sizing</span>: <span class="val">content-box</span>;  <span class="cmt">/* default: width solo del contenido */</span>
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- DISPLAY -->
+    <section id="display">
+      <h3>👁️ Display</h3>
+      <p>La propiedad display controla cómo se comporta un elemento en el flujo del documento.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> valores de display</div>
+        <div class="demo-code"><pre><span class="prop">display</span>: <span class="val">block</span>;         <span class="cmt">/* ocupa todo el ancho (div, p, h1) */</span>
+<span class="prop">display</span>: <span class="val">inline</span>;        <span class="cmt">/* solo el ancho del contenido (span, a) */</span>
+<span class="prop">display</span>: <span class="val">inline-block</span>;  <span class="cmt">/* inline pero acepta width/height */</span>
+<span class="prop">display</span>: <span class="val">flex</span>;          <span class="cmt">/* contenedor flexbox */</span>
+<span class="prop">display</span>: <span class="val">grid</span>;          <span class="cmt">/* contenedor grid */</span>
+<span class="prop">display</span>: <span class="val">none</span>;          <span class="cmt">/* oculta (no ocupa espacio) */</span>
+<span class="prop">visibility</span>: <span class="val">hidden</span>;     <span class="cmt">/* oculta pero SÍ ocupa espacio */</span>
+<span class="prop">opacity</span>: <span class="val">0</span>;             <span class="cmt">/* transparente, ocupa espacio */</span></pre></div>
+      </div>
+    </section>
+
+    <!-- FLEXBOX -->
+    <section id="flexbox">
+      <h3>💪 Flexbox</h3>
+      <p>Para distribuir elementos en una sola dimensión (fila o columna).</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> flex demo</div>
+        <div class="demo-preview">
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div>
+              <p style="font-size:0.75rem;color:#666;margin-bottom:4px">justify-content: space-between</p>
+              <div style="display:flex;justify-content:space-between;background:#e3f2fd;padding:8px;border-radius:6px">
+                <div style="background:#1976d2;color:white;padding:8px 14px;border-radius:4px;font-size:0.8rem">A</div>
+                <div style="background:#1976d2;color:white;padding:8px 14px;border-radius:4px;font-size:0.8rem">B</div>
+                <div style="background:#1976d2;color:white;padding:8px 14px;border-radius:4px;font-size:0.8rem">C</div>
+              </div>
+            </div>
+            <div>
+              <p style="font-size:0.75rem;color:#666;margin-bottom:4px">flex-grow: 1 en el del medio</p>
+              <div style="display:flex;gap:8px;background:#e8f5e9;padding:8px;border-radius:6px">
+                <div style="background:#2e7d32;color:white;padding:8px 14px;border-radius:4px;font-size:0.8rem">A</div>
+                <div style="background:#43a047;color:white;padding:8px 14px;border-radius:4px;font-size:0.8rem;flex:1;text-align:center">B (grow)</div>
+                <div style="background:#2e7d32;color:white;padding:8px 14px;border-radius:4px;font-size:0.8rem">C</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="sel">.contenedor</span> {
+  <span class="prop">display</span>: <span class="val">flex</span>;
+
+  <span class="cmt">/* DIRECCIÓN */</span>
+  <span class="prop">flex-direction</span>: <span class="val">row</span>;          <span class="cmt">/* → fila (default) */</span>
+  <span class="prop">flex-direction</span>: <span class="val">column</span>;       <span class="cmt">/* ↓ columna */</span>
+  <span class="prop">flex-direction</span>: <span class="val">row-reverse</span>;  <span class="cmt">/* ← reversa */</span>
+
+  <span class="cmt">/* EJE PRINCIPAL (horizontal en row) */</span>
+  <span class="prop">justify-content</span>: <span class="val">flex-start</span>;    <span class="cmt">/* |ABC       */</span>
+  <span class="prop">justify-content</span>: <span class="val">flex-end</span>;      <span class="cmt">/*       ABC| */</span>
+  <span class="prop">justify-content</span>: <span class="val">center</span>;        <span class="cmt">/*    ABC     */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-between</span>; <span class="cmt">/* A   B   C  */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-around</span>;  <span class="cmt">/*  A   B   C */</span>
+  <span class="prop">justify-content</span>: <span class="val">space-evenly</span>;  <span class="cmt">/* igual a los dos lados */</span>
+
+  <span class="cmt">/* EJE SECUNDARIO (vertical en row) */</span>
+  <span class="prop">align-items</span>: <span class="val">stretch</span>;    <span class="cmt">/* default: se estiran */</span>
+  <span class="prop">align-items</span>: <span class="val">center</span>;     <span class="cmt">/* centrado vertical */</span>
+  <span class="prop">align-items</span>: <span class="val">flex-start</span>; <span class="cmt">/* arriba */</span>
+  <span class="prop">align-items</span>: <span class="val">flex-end</span>;   <span class="cmt">/* abajo */</span>
+  <span class="prop">align-items</span>: <span class="val">baseline</span>;   <span class="cmt">/* alineado al texto */</span>
+
+  <span class="prop">gap</span>: <span class="val">16px</span>;          <span class="cmt">/* espacio entre items */</span>
+  <span class="prop">flex-wrap</span>: <span class="val">wrap</span>;    <span class="cmt">/* permite saltos de línea */</span>
+}
+
+<span class="sel">.item</span> {
+  <span class="prop">flex-grow</span>: <span class="val">1</span>;    <span class="cmt">/* crece para llenar espacio */</span>
+  <span class="prop">flex-shrink</span>: <span class="val">0</span>;  <span class="cmt">/* no se encoge */</span>
+  <span class="prop">flex-basis</span>: <span class="val">200px</span>; <span class="cmt">/* tamaño base */</span>
+  <span class="prop">flex</span>: <span class="val">1 0 200px</span>;  <span class="cmt">/* shorthand: grow shrink basis */</span>
+  <span class="prop">align-self</span>: <span class="val">center</span>; <span class="cmt">/* anula align-items solo para este */</span>
+  <span class="prop">order</span>: <span class="val">2</span>;           <span class="cmt">/* reordena visualmente */</span>
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- GRID -->
+    <section id="grid">
+      <h3>🔲 CSS Grid</h3>
+      <p>Para layouts en dos dimensiones (filas Y columnas a la vez).</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> grid demo</div>
+        <div class="demo-preview">
+          <div style="display:grid;grid-template-columns:1fr 2fr 1fr;grid-template-rows:auto auto;gap:8px">
+            <div style="background:#1a237e;color:white;padding:10px;text-align:center;border-radius:4px;font-size:0.8rem;grid-column:span 3">Header (span 3)</div>
+            <div style="background:#283593;color:white;padding:14px 8px;text-align:center;border-radius:4px;font-size:0.8rem">Sidebar</div>
+            <div style="background:#3949ab;color:white;padding:14px 8px;text-align:center;border-radius:4px;font-size:0.8rem">Main Content</div>
+            <div style="background:#283593;color:white;padding:14px 8px;text-align:center;border-radius:4px;font-size:0.8rem">Aside</div>
+            <div style="background:#1a237e;color:white;padding:10px;text-align:center;border-radius:4px;font-size:0.8rem;grid-column:span 3">Footer (span 3)</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="sel">.contenedor</span> {
+  <span class="prop">display</span>: <span class="val">grid</span>;
+
+  <span class="cmt">/* COLUMNAS */</span>
+  <span class="prop">grid-template-columns</span>: <span class="val">1fr 2fr 1fr</span>;       <span class="cmt">/* fracciones */</span>
+  <span class="prop">grid-template-columns</span>: <span class="val">200px auto 200px</span>;   <span class="cmt">/* fijo + auto */</span>
+  <span class="prop">grid-template-columns</span>: <span class="val">repeat(3, 1fr)</span>;    <span class="cmt">/* 3 iguales */</span>
+  <span class="prop">grid-template-columns</span>: <span class="val">repeat(auto-fit, minmax(200px, 1fr))</span>; <span class="cmt">/* responsivo */</span>
+
+  <span class="cmt">/* FILAS */</span>
+  <span class="prop">grid-template-rows</span>: <span class="val">80px auto 60px</span>;
+
+  <span class="cmt">/* AREAS NOMBRADAS */</span>
+  <span class="prop">grid-template-areas</span>:
+    <span class="str">"header header header"</span>
+    <span class="str">"sidebar main aside"</span>
+    <span class="str">"footer footer footer"</span>;
+
+  <span class="prop">gap</span>: <span class="val">16px</span>;          <span class="cmt">/* gap entre filas y columnas */</span>
+  <span class="prop">row-gap</span>: <span class="val">20px</span>;       <span class="cmt">/* solo filas */</span>
+  <span class="prop">column-gap</span>: <span class="val">10px</span>;    <span class="cmt">/* solo columnas */</span>
+}
+
+<span class="sel">.header</span>  { <span class="prop">grid-area</span>: <span class="val">header</span>; }
+<span class="sel">.sidebar</span> { <span class="prop">grid-area</span>: <span class="val">sidebar</span>; }
+
+<span class="sel">.item</span> {
+  <span class="prop">grid-column</span>: <span class="val">1 / 3</span>;      <span class="cmt">/* de col 1 a col 3 */</span>
+  <span class="prop">grid-column</span>: <span class="val">span 2</span>;     <span class="cmt">/* ocupa 2 columnas */</span>
+  <span class="prop">grid-row</span>: <span class="val">1 / 3</span>;         <span class="cmt">/* de fila 1 a fila 3 */</span>
+  <span class="prop">justify-self</span>: <span class="val">center</span>;    <span class="cmt">/* alinear en su celda */</span>
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- POSICIÓN -->
+    <section id="posicion">
+      <h3>📍 Posicionamiento</h3>
+      <p>Controla cómo y dónde se ubica un elemento en la página.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> position demo</div>
+        <div class="demo-preview">
+          <div style="position:relative;height:120px;background:#e3f2fd;border-radius:6px;margin-bottom:8px">
+            <div style="position:static;background:#bbdefb;color:#0d47a1;padding:6px 10px;border-radius:4px;display:inline-block;font-size:0.8rem">static (flujo normal)</div>
+            <div style="position:relative;top:15px;left:15px;background:#1976d2;color:white;padding:6px 10px;border-radius:4px;display:inline-block;font-size:0.8rem">relative (desplazado)</div>
+            <div style="position:absolute;bottom:8px;right:8px;background:#d32f2f;color:white;padding:6px 10px;border-radius:4px;font-size:0.8rem">absolute</div>
+          </div>
+          <p style="font-size:0.75rem;color:#666">fixed = fijo al viewport (scroll) · sticky = fijo al hacer scroll hasta un punto</p>
+        </div>
+        <div class="demo-code"><pre><span class="prop">position</span>: <span class="val">static</span>;    <span class="cmt">/* default, flujo normal */</span>
+<span class="prop">position</span>: <span class="val">relative</span>;  <span class="cmt">/* desplazado desde su lugar natural */</span>
+<span class="prop">position</span>: <span class="val">absolute</span>;  <span class="cmt">/* relativo al padre con position != static */</span>
+<span class="prop">position</span>: <span class="val">fixed</span>;     <span class="cmt">/* fijo al viewport, no scrollea */</span>
+<span class="prop">position</span>: <span class="val">sticky</span>;    <span class="cmt">/* normal hasta un punto, luego fijo */</span>
+
+<span class="cmt">/* Con relative/absolute/fixed/sticky se usan: */</span>
+<span class="prop">top</span>: <span class="val">20px</span>;
+<span class="prop">right</span>: <span class="val">0</span>;
+<span class="prop">bottom</span>: <span class="val">0</span>;
+<span class="prop">left</span>: <span class="val">50%</span>;
+
+<span class="cmt">/* Centrar absolutamente */</span>
+<span class="prop">position</span>: <span class="val">absolute</span>;
+<span class="prop">top</span>: <span class="val">50%</span>; <span class="prop">left</span>: <span class="val">50%</span>;
+<span class="prop">transform</span>: <span class="val">translate(-50%, -50%)</span>;
+
+<span class="prop">z-index</span>: <span class="val">10</span>;  <span class="cmt">/* capa de apilamiento (mayor = encima) */</span></pre></div>
+      </div>
+    </section>
+
+    <!-- COLORES -->
+    <section id="colores">
+      <h3>🎨 Colores</h3>
+      <p>CSS acepta colores en múltiples formatos.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> formatos de color</div>
+        <div class="demo-preview">
+          <div class="color-swatches">
+            <div class="swatch" style="background:red;color:white">named</div>
+            <div class="swatch" style="background:#ff6b35;color:white">hex</div>
+            <div class="swatch" style="background:#f60;color:white">hex3</div>
+            <div class="swatch" style="background:rgb(79,195,247);color:white">rgb</div>
+            <div class="swatch" style="background:rgba(79,195,247,0.5)">rgba</div>
+            <div class="swatch" style="background:hsl(200,90%,60%);color:white">hsl</div>
+            <div class="swatch" style="background:hsla(200,90%,60%,0.5)">hsla</div>
+            <div class="swatch" style="background:oklch(70% 0.18 220);color:white">oklch</div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="prop">color</span>: <span class="val">red</span>;                       <span class="cmt">/* nombre */</span>
+<span class="prop">color</span>: <span class="val">#ff6b35</span>;                    <span class="cmt">/* hex (RRGGBB) */</span>
+<span class="prop">color</span>: <span class="val">#f60</span>;                       <span class="cmt">/* hex corto (RGB) */</span>
+<span class="prop">color</span>: <span class="val">rgb(255, 107, 53)</span>;          <span class="cmt">/* RGB */</span>
+<span class="prop">color</span>: <span class="val">rgba(255, 107, 53, 0.5)</span>;    <span class="cmt">/* RGBA (con opacidad) */</span>
+<span class="prop">color</span>: <span class="val">hsl(19, 100%, 60%)</span>;         <span class="cmt">/* tono, saturación, luminosidad */</span>
+<span class="prop">color</span>: <span class="val">oklch(65% 0.22 30)</span>;         <span class="cmt">/* formato moderno CSS4 */</span>
+<span class="prop">color</span>: <span class="val">currentColor</span>;              <span class="cmt">/* hereda el color del padre */</span>
+<span class="prop">color</span>: <span class="val">transparent</span>;               <span class="cmt">/* transparente */</span>
+
+<span class="cmt">/* GRADIENTES */</span>
+<span class="prop">background</span>: <span class="val">linear-gradient(to right, #ff6b35, #4fc3f7)</span>;
+<span class="prop">background</span>: <span class="val">radial-gradient(circle, #ff6b35, transparent)</span>;
+<span class="prop">background</span>: <span class="val">conic-gradient(from 0deg, red, blue, green)</span>;
+
+<span class="cmt">/* MIX moderno */</span>
+<span class="prop">color</span>: <span class="val">color-mix(in srgb, #ff6b35 50%, white)</span>;</pre></div>
+      </div>
+    </section>
+
+    <!-- TIPOGRAFÍA -->
+    <section id="tipografia">
+      <h3>🔤 Tipografía</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> propiedades de texto</div>
+        <div class="demo-code"><pre><span class="cmt">/* FUENTE */</span>
+<span class="prop">font-family</span>: <span class="val">'Roboto', Arial, sans-serif</span>;  <span class="cmt">/* con fallbacks */</span>
+<span class="prop">font-size</span>: <span class="val">16px</span>;      <span class="cmt">/* px / em / rem / % / vw */</span>
+<span class="prop">font-size</span>: <span class="val">1.5rem</span>;    <span class="cmt">/* relativo al root (html) */</span>
+<span class="prop">font-size</span>: <span class="val">clamp(1rem, 4vw, 2rem)</span>; <span class="cmt">/* fluido responsivo */</span>
+<span class="prop">font-weight</span>: <span class="val">400</span>;     <span class="cmt">/* 100-900 (normal=400, bold=700) */</span>
+<span class="prop">font-style</span>: <span class="val">italic</span>;
+<span class="prop">font-variant</span>: <span class="val">small-caps</span>;
+
+<span class="cmt">/* TEXTO */</span>
+<span class="prop">color</span>: <span class="val">#333</span>;
+<span class="prop">line-height</span>: <span class="val">1.6</span>;         <span class="cmt">/* altura de línea */</span>
+<span class="prop">letter-spacing</span>: <span class="val">0.1em</span>;   <span class="cmt">/* espacio entre letras */</span>
+<span class="prop">word-spacing</span>: <span class="val">4px</span>;
+<span class="prop">text-align</span>: <span class="val">left | center | right | justify</span>;
+<span class="prop">text-transform</span>: <span class="val">uppercase | lowercase | capitalize</span>;
+<span class="prop">text-decoration</span>: <span class="val">underline | line-through | none</span>;
+<span class="prop">text-shadow</span>: <span class="val">2px 2px 4px rgba(0,0,0,0.3)</span>;
+
+<span class="cmt">/* OVERFLOW DE TEXTO */</span>
+<span class="prop">white-space</span>: <span class="val">nowrap</span>;
+<span class="prop">overflow</span>: <span class="val">hidden</span>;
+<span class="prop">text-overflow</span>: <span class="val">ellipsis</span>;  <span class="cmt">/* muestra "..." */</span>
+
+<span class="cmt">/* CARGA DE FUENTE EXTERNA */</span>
+<span class="sel">@font-face</span> {
+  <span class="prop">font-family</span>: <span class="val">'MiFuente'</span>;
+  <span class="prop">src</span>: <span class="val">url('fuente.woff2') format('woff2')</span>;
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- TRANSICIONES -->
+    <section id="transiciones">
+      <h3>🌊 Transiciones</h3>
+      <p>Suaviza los cambios de estado con CSS puro. Hovea el botón:</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> demo interactivo</div>
+        <div class="demo-preview" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
+          <button class="transition-btn">Hovea aquí</button>
+          <div style="width:60px;height:60px;background:#4fc3f7;border-radius:8px;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);cursor:pointer" onmouseenter="this.style.borderRadius='50%';this.style.background='#ff6b35'" onmouseleave="this.style.borderRadius='8px';this.style.background='#4fc3f7'"></div>
+        </div>
+        <div class="demo-code"><pre><span class="sel">.boton</span> {
+  <span class="prop">background</span>: <span class="val">blue</span>;
+  <span class="prop">transform</span>: <span class="val">scale(1)</span>;
+
+  <span class="cmt">/* TRANSICIÓN */</span>
+  <span class="prop">transition</span>: <span class="val">all 0.3s ease</span>;
+  <span class="cmt">/* propiedad | duración | timing-function | delay */</span>
+
+  <span class="cmt">/* Múltiples propiedades */</span>
+  <span class="prop">transition</span>:
+    <span class="val">background 0.3s ease</span>,
+    <span class="val">transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)</span>;
+}
+
+<span class="sel">.boton:hover</span> {
+  <span class="prop">background</span>: <span class="val">red</span>;
+  <span class="prop">transform</span>: <span class="val">scale(1.1) rotate(-2deg)</span>;
+  <span class="prop">box-shadow</span>: <span class="val">0 8px 20px rgba(255,0,0,0.4)</span>;
+}
+
+<span class="cmt">/* TIMING FUNCTIONS */</span>
+<span class="prop">transition-timing-function</span>: <span class="val">ease</span>;
+<span class="prop">transition-timing-function</span>: <span class="val">ease-in</span>;
+<span class="prop">transition-timing-function</span>: <span class="val">ease-out</span>;
+<span class="prop">transition-timing-function</span>: <span class="val">ease-in-out</span>;
+<span class="prop">transition-timing-function</span>: <span class="val">linear</span>;
+<span class="prop">transition-timing-function</span>: <span class="val">cubic-bezier(x1, y1, x2, y2)</span>;</pre></div>
+      </div>
+    </section>
+
+    <!-- ANIMACIONES -->
+    <section id="animaciones">
+      <h3>🎬 Animaciones @keyframes</h3>
+      <p>Animaciones complejas que no dependen de interacción del usuario.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> animaciones en vivo</div>
+        <div class="demo-preview">
+          <div class="anim-demo">
+            <div><p style="font-size:0.7rem;color:#666;text-align:center;margin-bottom:6px">bounce</p><div class="anim-box bounce">⬆</div></div>
+            <div><p style="font-size:0.7rem;color:#666;text-align:center;margin-bottom:6px">spin</p><div class="anim-box spin">↻</div></div>
+            <div><p style="font-size:0.7rem;color:#666;text-align:center;margin-bottom:6px">pulse</p><div class="anim-box pulse">●</div></div>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">/* 1. Definir la animación */</span>
+<span class="sel">@keyframes</span> <span class="val">bounce</span> {
+  <span class="sel">0%, 100%</span> { <span class="prop">transform</span>: <span class="val">translateY(0)</span>; }
+  <span class="sel">50%</span>      { <span class="prop">transform</span>: <span class="val">translateY(-20px)</span>; }
+}
+
+<span class="sel">@keyframes</span> <span class="val">spin</span> {
+  <span class="sel">from</span> { <span class="prop">transform</span>: <span class="val">rotate(0deg)</span>; }
+  <span class="sel">to</span>   { <span class="prop">transform</span>: <span class="val">rotate(360deg)</span>; }
+}
+
+<span class="cmt">/* 2. Aplicar al elemento */</span>
+<span class="sel">.elemento</span> {
+  <span class="prop">animation-name</span>: <span class="val">bounce</span>;
+  <span class="prop">animation-duration</span>: <span class="val">1s</span>;
+  <span class="prop">animation-timing-function</span>: <span class="val">ease-in-out</span>;
+  <span class="prop">animation-delay</span>: <span class="val">0.5s</span>;
+  <span class="prop">animation-iteration-count</span>: <span class="val">infinite</span>;  <span class="cmt">/* o un número */</span>
+  <span class="prop">animation-direction</span>: <span class="val">alternate</span>;        <span class="cmt">/* normal | reverse | alternate */</span>
+  <span class="prop">animation-fill-mode</span>: <span class="val">forwards</span>;         <span class="cmt">/* mantiene estado final */</span>
+
+  <span class="cmt">/* shorthand */</span>
+  <span class="prop">animation</span>: <span class="val">bounce 1s ease-in-out infinite</span>;
+
+  <span class="cmt">/* múltiples animaciones */</span>
+  <span class="prop">animation</span>: <span class="val">bounce 1s ease infinite, spin 2s linear infinite</span>;
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- PSEUDO-CLASES -->
+    <section id="pseudos">
+      <h3>🔮 Pseudo-clases y Pseudo-elementos</h3>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> pseudo-clases en lista (hovea los items)</div>
+        <div class="demo-preview">
+          <ul class="pseudo-list">
+            <li>:first-child (estilo especial)</li>
+            <li>:nth-child(2) (azul medio)</li>
+            <li>:hover (prueba haciendo hover)</li>
+            <li>:last-child (estilo especial)</li>
+          </ul>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">/* ═══ PSEUDO-CLASES (estado) ═══ */</span>
+<span class="sel">a:hover</span>          { }  <span class="cmt">/* al pasar el mouse */</span>
+<span class="sel">a:focus</span>          { }  <span class="cmt">/* al tener foco (tab) */</span>
+<span class="sel">a:active</span>         { }  <span class="cmt">/* al hacer click */</span>
+<span class="sel">a:visited</span>        { }  <span class="cmt">/* enlace ya visitado */</span>
+
+<span class="sel">li:first-child</span>   { }  <span class="cmt">/* primer hijo */</span>
+<span class="sel">li:last-child</span>    { }  <span class="cmt">/* último hijo */</span>
+<span class="sel">li:nth-child(2)</span>  { }  <span class="cmt">/* hijo número 2 */</span>
+<span class="sel">li:nth-child(odd)</span>{ }  <span class="cmt">/* impares */</span>
+<span class="sel">li:nth-child(even)</span>{ } <span class="cmt">/* pares */</span>
+<span class="sel">p:not(.activo)</span>  { }  <span class="cmt">/* que NO tenga la clase */</span>
+
+<span class="sel">input:checked</span>    { }  <span class="cmt">/* checkbox/radio marcado */</span>
+<span class="sel">input:disabled</span>   { }  <span class="cmt">/* deshabilitado */</span>
+<span class="sel">input:valid</span>      { }  <span class="cmt">/* validación HTML correcta */</span>
+<span class="sel">input:invalid</span>    { }  <span class="cmt">/* validación HTML fallida */</span>
+<span class="sel">input:placeholder-shown</span> { }  <span class="cmt">/* muestra placeholder */</span>
+
+<span class="cmt">/* ═══ PSEUDO-ELEMENTOS (parte del elemento) ═══ */</span>
+<span class="sel">::before</span>         { <span class="prop">content</span>: <span class="val">"★"</span>; }  <span class="cmt">/* inserta antes del contenido */</span>
+<span class="sel">::after</span>          { <span class="prop">content</span>: <span class="val">""</span>; }   <span class="cmt">/* inserta después del contenido */</span>
+<span class="sel">::placeholder</span>    { <span class="prop">color</span>: <span class="val">gray</span>; }   <span class="cmt">/* estilo del placeholder */</span>
+<span class="sel">::selection</span>      { <span class="prop">background</span>: <span class="val">yellow</span>; } <span class="cmt">/* texto seleccionado */</span>
+<span class="sel">::first-line</span>     { <span class="prop">font-weight</span>: <span class="val">bold</span>; }  <span class="cmt">/* primera línea */</span>
+<span class="sel">::first-letter</span>   { <span class="prop">font-size</span>: <span class="val">2em</span>; }   <span class="cmt">/* primera letra */</span></pre></div>
+      </div>
+    </section>
+
+    <!-- VARIABLES CSS -->
+    <section id="variables">
+      <h3>🔧 Variables CSS (Custom Properties)</h3>
+      <p>Las variables CSS permiten reutilizar valores y crear temas dinámicos.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> mismo botón, distinto --btn-color</div>
+        <div class="demo-preview">
+          <div class="custom-props-demo">
+            <button class="custom-btn">Botón A (--btn-color: azul)</button>
+            <button class="custom-btn variant">Botón B (variante naranja)</button>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">/* Definir en :root = disponible globalmente */</span>
+<span class="sel">:root</span> {
+  <span class="prop">--color-primario</span>: <span class="val">#ff6b35</span>;
+  <span class="prop">--color-fondo</span>: <span class="val">#0a0a0f</span>;
+  <span class="prop">--espacio-md</span>: <span class="val">16px</span>;
+  <span class="prop">--radio-btn</span>: <span class="val">8px</span>;
+  <span class="prop">--sombra</span>: <span class="val">0 4px 12px rgba(0,0,0,0.15)</span>;
+}
+
+<span class="sel">.boton</span> {
+  <span class="prop">background</span>: <span class="val">var(--color-primario)</span>;
+  <span class="prop">padding</span>: <span class="val">var(--espacio-md)</span>;
+  <span class="prop">border-radius</span>: <span class="val">var(--radio-btn)</span>;
+  <span class="prop">box-shadow</span>: <span class="val">var(--sombra)</span>;
+
+  <span class="cmt">/* Valor fallback si la variable no existe */</span>
+  <span class="prop">color</span>: <span class="val">var(--color-texto, white)</span>;
+}
+
+<span class="cmt">/* Sobreescribir solo en un componente */</span>
+<span class="sel">.tarjeta</span> {
+  <span class="prop">--color-primario</span>: <span class="val">blue</span>;  <span class="cmt">/* solo para .tarjeta y sus hijos */</span>
+}
+
+<span class="cmt">/* Cambiar tema con JS */</span>
+<span class="cmt">// document.documentElement.style.setProperty('--color-primario', 'red');</span>
+
+<span class="cmt">/* Tema oscuro con media query */</span>
+<span class="sel">@media (prefers-color-scheme: dark)</span> {
+  <span class="sel">:root</span> { <span class="prop">--color-fondo</span>: <span class="val">#111</span>; }
+}</pre></div>
+      </div>
+    </section>
+
+    <!-- RESPONSIVE -->
+    <section id="responsive">
+      <h3>📱 Responsive Design</h3>
+      <p>Adaptar el diseño a distintos tamaños de pantalla con media queries.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> media queries y unidades responsivas</div>
+        <div class="demo-code"><pre><span class="cmt">/* ═══ MEDIA QUERIES ═══ */</span>
+
+<span class="cmt">/* Mobile first: estilos base para móvil, luego se amplía */</span>
+<span class="sel">.grid</span> { <span class="prop">grid-template-columns</span>: <span class="val">1fr</span>; }         <span class="cmt">/* móvil: 1 columna */</span>
+
+<span class="sel">@media (min-width: 768px)</span> {                      <span class="cmt">/* tablet */</span>
+  <span class="sel">.grid</span> { <span class="prop">grid-template-columns</span>: <span class="val">repeat(2, 1fr)</span>; }
+}
+
+<span class="sel">@media (min-width: 1024px)</span> {                     <span class="cmt">/* desktop */</span>
+  <span class="sel">.grid</span> { <span class="prop">grid-template-columns</span>: <span class="val">repeat(3, 1fr)</span>; }
+}
+
+<span class="cmt">/* Por características del dispositivo */</span>
+<span class="sel">@media (orientation: landscape)</span>   { }  <span class="cmt">/* modo horizontal */</span>
+<span class="sel">@media (hover: none)</span>              { }  <span class="cmt">/* sin mouse (táctil) */</span>
+<span class="sel">@media print</span>                      { }  <span class="cmt">/* al imprimir */</span>
+<span class="sel">@media (prefers-color-scheme: dark)</span>{ }  <span class="cmt">/* modo oscuro del SO */</span>
+<span class="sel">@media (prefers-reduced-motion: reduce)</span>{ } <span class="cmt">/* sin animaciones */</span>
+
+<span class="cmt">/* ═══ UNIDADES RESPONSIVAS ═══ */</span>
+<span class="prop">font-size</span>: <span class="val">1rem</span>;      <span class="cmt">/* relativo al root (16px default) */</span>
+<span class="prop">font-size</span>: <span class="val">1em</span>;       <span class="cmt">/* relativo al padre */</span>
+<span class="prop">width</span>: <span class="val">50vw</span>;          <span class="cmt">/* 50% del viewport width */</span>
+<span class="prop">height</span>: <span class="val">100vh</span>;        <span class="cmt">/* 100% del viewport height */</span>
+<span class="prop">font-size</span>: <span class="val">5vmin</span>;     <span class="cmt">/* % del lado más pequeño */</span>
+<span class="prop">width</span>: <span class="val">min(100%, 800px)</span>;     <span class="cmt">/* el menor valor */</span>
+<span class="prop">width</span>: <span class="val">max(300px, 50%)</span>;      <span class="cmt">/* el mayor valor */</span>
+<span class="prop">font-size</span>: <span class="val">clamp(1rem, 3vw, 2rem)</span>; <span class="cmt">/* min, ideal, max */</span></pre></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

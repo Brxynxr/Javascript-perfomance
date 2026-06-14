@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML — Referencia Completa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0a08;
+      --surface: #161210;
+      --surface2: #1e1a17;
+      --border: #2a2320;
+      --text: #f0ebe8;
+      --muted: #7a6e68;
+      --accent: #ff6b35;
+      --accent2: #ff9c70;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; align-items: center; gap: 2rem;
+    }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    nav a:hover, nav a.back { color: var(--accent); }
+    nav .title { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); margin-left: auto; font-size: 1.1rem; }
+
+    /* SIDEBAR */
+    .layout { display: flex; }
+    aside {
+      width: 220px; min-height: calc(100vh - 53px);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 0;
+      position: sticky; top: 53px; height: calc(100vh - 53px); overflow-y: auto;
+    }
+    aside h3 { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; padding: 0.5rem 1.5rem; margin-bottom: 0.25rem; font-family: 'DM Mono', monospace; }
+    aside a { display: block; padding: 0.35rem 1.5rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; transition: all 0.2s; border-left: 2px solid transparent; }
+    aside a:hover { color: var(--accent); border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, transparent); }
+
+    /* MAIN */
+    main { flex: 1; padding: 3rem 4rem; max-width: 900px; }
+
+    .section-header { margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .section-header h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+    .section-header p { color: var(--muted); font-size: 0.9rem; }
+
+    section { margin-bottom: 4rem; scroll-margin-top: 70px; }
+    h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; color: var(--accent2); margin-bottom: 1rem; margin-top: 2rem; }
+    p { color: color-mix(in srgb, var(--text) 70%, transparent); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem; }
+
+    /* DEMO + CODE BLOCKS */
+    .demo-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .demo-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 0.5rem; align-items: center;
+    }
+    .demo-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .demo-label .dot.preview { background: #4ade80; }
+    .demo-label .dot.code   { background: var(--accent); }
+
+    .demo-preview {
+      padding: 1.5rem;
+      background: #fff;
+      color: #111;
+      font-family: sans-serif;
+    }
+    .demo-code {
+      background: #0f0e0d;
+      padding: 1.25rem;
+      overflow-x: auto;
+    }
+    .demo-code pre {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #c9b99a;
+    }
+    .demo-code .tag   { color: #ff6b35; }
+    .demo-code .attr  { color: #ffd54f; }
+    .demo-code .val   { color: #80deea; }
+    .demo-code .cmt   { color: #5a5248; }
+
+    /* Specific demo styles */
+    .demo-preview table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+    .demo-preview th { background: #333; color: #fff; padding: 0.5rem; text-align: left; }
+    .demo-preview td { border: 1px solid #ddd; padding: 0.5rem; }
+    .demo-preview form { display: flex; flex-direction: column; gap: 0.5rem; max-width: 320px; }
+    .demo-preview input, .demo-preview select, .demo-preview textarea { border: 1px solid #ccc; border-radius: 4px; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+    .demo-preview button { background: #ff6b35; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+    .demo-preview figure { text-align: center; }
+    .demo-preview figcaption { font-size: 0.75rem; color: #888; margin-top: 0.3rem; }
+    .demo-preview details summary { cursor: pointer; font-weight: bold; }
+    .demo-preview progress { width: 100%; }
+    .demo-preview meter { width: 100%; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="back">← Inicio</a>
+  <a href="css-reference.html">CSS</a>
+  <a href="js-reference.html">JS</a>
+  <span class="title">HTML Reference</span>
+</nav>
+
+<div class="layout">
+  <aside>
+    <h3>Secciones</h3>
+    <a href="#estructura">Estructura base</a>
+    <a href="#texto">Texto &amp; Tipografía</a>
+    <a href="#enlaces">Enlaces</a>
+    <a href="#listas">Listas</a>
+    <a href="#tablas">Tablas</a>
+    <a href="#formularios">Formularios</a>
+    <a href="#multimedia">Multimedia</a>
+    <a href="#semantica">Semántica</a>
+    <a href="#especiales">Elementos especiales</a>
+    <a href="#meta">Meta &amp; Head</a>
+  </aside>
+
+  <main>
+    <div class="section-header">
+      <h2>🏗️ HTML Reference</h2>
+      <p>Todos los elementos HTML con demo visual y código. De lo básico a lo avanzado.</p>
+    </div>
+
+    <!-- ====== ESTRUCTURA ====== -->
+    <section id="estructura">
+      <h3>📄 Estructura base de un documento HTML</h3>
+      <p>Todo archivo HTML comienza con esta estructura. El navegador la necesita para saber cómo interpretar el documento.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> código base</div>
+        <div class="demo-code"><pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="val">"es"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">/&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Mi página<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="cmt">&lt;!-- Todo el contenido visible va aquí --&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== TEXTO ====== -->
+    <section id="texto">
+      <h3>✍️ Texto &amp; Tipografía</h3>
+      <p>Etiquetas para dar jerarquía y formato al texto.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> preview</div>
+        <div class="demo-preview">
+          <h1 style="font-size:1.6rem;margin-bottom:0.3rem">h1 — Título principal</h1>
+          <h2 style="font-size:1.3rem;margin-bottom:0.3rem">h2 — Subtítulo</h2>
+          <h3 style="font-size:1.1rem;margin-bottom:0.3rem">h3 — Sección</h3>
+          <h4 style="font-size:1rem;margin-bottom:0.6rem">h4 — Subsección</h4>
+          <p>Este es un párrafo normal. Con <strong>texto en negrita</strong>, <em>texto en cursiva</em>, <u>texto subrayado</u>, y <s>texto tachado</s>.</p>
+          <p><small>Texto pequeño (small)</small> — <mark>Texto resaltado (mark)</mark> — <code>código inline</code></p>
+          <blockquote style="border-left:3px solid #ff6b35;padding-left:1rem;color:#555;margin:0.5rem 0">"Esto es una cita con blockquote"</blockquote>
+          <pre style="background:#f0f0f0;padding:0.5rem;font-size:0.8rem">pre → texto con espacios
+  exactamente como está escrito</pre>
+          <p>Texto con <sup>superíndice</sup> y texto con <sub>subíndice</sub></p>
+          <p><abbr title="HyperText Markup Language">HTML</abbr> — abbr muestra el significado al hacer hover</p>
+        </div>
+        <div class="demo-code"><pre><span class="tag">&lt;h1&gt;</span>Título principal<span class="tag">&lt;/h1&gt;</span>    <span class="cmt">&lt;!-- h1 hasta h6 --&gt;</span>
+<span class="tag">&lt;p&gt;</span>Párrafo con <span class="tag">&lt;strong&gt;</span>negrita<span class="tag">&lt;/strong&gt;</span>, <span class="tag">&lt;em&gt;</span>cursiva<span class="tag">&lt;/em&gt;</span>, <span class="tag">&lt;u&gt;</span>subrayado<span class="tag">&lt;/u&gt;</span><span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;mark&gt;</span>Texto resaltado<span class="tag">&lt;/mark&gt;</span>
+<span class="tag">&lt;code&gt;</span>código inline<span class="tag">&lt;/code&gt;</span>
+<span class="tag">&lt;blockquote&gt;</span>Cita larga<span class="tag">&lt;/blockquote&gt;</span>
+<span class="tag">&lt;pre&gt;</span>Texto preformateado<span class="tag">&lt;/pre&gt;</span>
+<span class="tag">&lt;sup&gt;</span>superíndice<span class="tag">&lt;/sup&gt;</span>  <span class="tag">&lt;sub&gt;</span>subíndice<span class="tag">&lt;/sub&gt;</span>
+<span class="tag">&lt;abbr</span> <span class="attr">title</span>=<span class="val">"significado"</span><span class="tag">&gt;</span>abreviatura<span class="tag">&lt;/abbr&gt;</span>
+<span class="tag">&lt;br&gt;</span>    <span class="cmt">&lt;!-- salto de línea --&gt;</span>
+<span class="tag">&lt;hr&gt;</span>    <span class="cmt">&lt;!-- línea horizontal --&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== ENLACES ====== -->
+    <section id="enlaces">
+      <h3>🔗 Enlaces</h3>
+      <p>El elemento <code>&lt;a&gt;</code> crea hipervínculos a otras páginas, secciones o recursos.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> preview</div>
+        <div class="demo-preview">
+          <p><a href="#" style="color:#ff6b35">Enlace normal</a></p>
+          <p><a href="#" target="_blank" style="color:#ff6b35">Abre en nueva pestaña (target="_blank")</a></p>
+          <p><a href="mailto:tu@correo.com" style="color:#ff6b35">Enlace de correo (mailto:)</a></p>
+          <p><a href="tel:+573001234567" style="color:#ff6b35">Enlace de teléfono (tel:)</a></p>
+          <p><a href="#estructura" style="color:#ff6b35">Ir a sección interna (ancla #id)</a></p>
+          <p><a href="archivo.pdf" download style="color:#ff6b35">Descargar archivo (download)</a></p>
+        </div>
+        <div class="demo-code"><pre><span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"https://pagina.com"</span><span class="tag">&gt;</span>Enlace externo<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"pagina.html"</span><span class="tag">&gt;</span>Enlace interno<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"https://..."</span> <span class="attr">target</span>=<span class="val">"_blank"</span> <span class="attr">rel</span>=<span class="val">"noopener"</span><span class="tag">&gt;</span>Nueva pestaña<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"mailto:email@correo.com"</span><span class="tag">&gt;</span>Enviar correo<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"tel:+573001234567"</span><span class="tag">&gt;</span>Llamar<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"#seccion-id"</span><span class="tag">&gt;</span>Ancla interna<span class="tag">&lt;/a&gt;</span>
+<span class="tag">&lt;a</span> <span class="attr">href</span>=<span class="val">"archivo.pdf"</span> <span class="attr">download</span><span class="tag">&gt;</span>Descargar<span class="tag">&lt;/a&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== LISTAS ====== -->
+    <section id="listas">
+      <h3>📋 Listas</h3>
+      <p>Tres tipos de listas: sin orden, ordenadas y de definición.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> preview</div>
+        <div class="demo-preview" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
+          <div>
+            <strong>ul — sin orden</strong>
+            <ul><li>Mango</li><li>Papaya</li><li>Maracuyá</li></ul>
+          </div>
+          <div>
+            <strong>ol — ordenada</strong>
+            <ol><li>Primero</li><li>Segundo</li><li>Tercero</li></ol>
+          </div>
+          <div>
+            <strong>dl — definición</strong>
+            <dl>
+              <dt><strong>HTML</strong></dt><dd>Estructura</dd>
+              <dt><strong>CSS</strong></dt><dd>Estilos</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">&lt;!-- Lista sin orden --&gt;</span>
+<span class="tag">&lt;ul&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Elemento<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ul&gt;</span>
+
+<span class="cmt">&lt;!-- Lista ordenada --&gt;</span>
+<span class="tag">&lt;ol</span> <span class="attr">type</span>=<span class="val">"1"</span><span class="tag">&gt;</span>  <span class="cmt">&lt;!-- type: 1, A, a, I, i --&gt;</span>
+  <span class="tag">&lt;li&gt;</span>Primero<span class="tag">&lt;/li&gt;</span>
+<span class="tag">&lt;/ol&gt;</span>
+
+<span class="cmt">&lt;!-- Lista de definición --&gt;</span>
+<span class="tag">&lt;dl&gt;</span>
+  <span class="tag">&lt;dt&gt;</span>Término<span class="tag">&lt;/dt&gt;</span>
+  <span class="tag">&lt;dd&gt;</span>Definición<span class="tag">&lt;/dd&gt;</span>
+<span class="tag">&lt;/dl&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== TABLAS ====== -->
+    <section id="tablas">
+      <h3>📊 Tablas</h3>
+      <p>Estructura de datos en filas y columnas. Ideal para datos tabulares, no para layouts.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> preview</div>
+        <div class="demo-preview">
+          <table>
+            <thead><tr><th>Nombre</th><th>Ciudad</th><th>Edad</th></tr></thead>
+            <tbody>
+              <tr><td>Breyner</td><td>Barranquilla</td><td>20</td></tr>
+              <tr><td>Juan</td><td>Medellín</td><td>22</td></tr>
+            </tbody>
+            <tfoot><tr><td colspan="3" style="text-align:center;font-size:0.75rem;color:#888">Total: 2 registros</td></tr></tfoot>
+          </table>
+        </div>
+        <div class="demo-code"><pre><span class="tag">&lt;table&gt;</span>
+  <span class="tag">&lt;thead&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>
+      <span class="tag">&lt;th&gt;</span>Nombre<span class="tag">&lt;/th&gt;</span>  <span class="cmt">&lt;!-- th = encabezado --&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/thead&gt;</span>
+  <span class="tag">&lt;tbody&gt;</span>
+    <span class="tag">&lt;tr&gt;</span>                    <span class="cmt">&lt;!-- tr = fila --&gt;</span>
+      <span class="tag">&lt;td&gt;</span>Breyner<span class="tag">&lt;/td&gt;</span>  <span class="cmt">&lt;!-- td = celda --&gt;</span>
+    <span class="tag">&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tbody&gt;</span>
+  <span class="tag">&lt;tfoot&gt;</span>
+    <span class="tag">&lt;tr&gt;&lt;td</span> <span class="attr">colspan</span>=<span class="val">"3"</span><span class="tag">&gt;</span>Pie<span class="tag">&lt;/td&gt;&lt;/tr&gt;</span>
+  <span class="tag">&lt;/tfoot&gt;</span>
+<span class="tag">&lt;/table&gt;</span>
+
+<span class="cmt">&lt;!-- colspan = une columnas, rowspan = une filas --&gt;</span>
+<span class="tag">&lt;td</span> <span class="attr">colspan</span>=<span class="val">"2"</span><span class="tag">&gt;</span>ocupa 2 columnas<span class="tag">&lt;/td&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== FORMULARIOS ====== -->
+    <section id="formularios">
+      <h3>📝 Formularios</h3>
+      <p>Para capturar datos del usuario. Hay muchos tipos de inputs disponibles.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> preview</div>
+        <div class="demo-preview">
+          <form onsubmit="return false">
+            <label>Texto: <input type="text" placeholder="Escribe algo" /></label>
+            <label>Email: <input type="email" placeholder="tu@correo.com" /></label>
+            <label>Contraseña: <input type="password" placeholder="••••••" /></label>
+            <label>Número: <input type="number" min="0" max="100" value="50" /></label>
+            <label>Fecha: <input type="date" /></label>
+            <label>Color: <input type="color" value="#ff6b35" /></label>
+            <label>Rango: <input type="range" min="0" max="100" /></label>
+            <label>Checkbox: <input type="checkbox" /> Acepto términos</label>
+            <label>Radio: <input type="radio" name="op" /> Opción A <input type="radio" name="op" /> Opción B</label>
+            <label>Select: <select><option>Opción 1</option><option>Opción 2</option></select></label>
+            <label>Textarea: <textarea rows="2" placeholder="Mensaje..."></textarea></label>
+            <label>Archivo: <input type="file" /></label>
+            <button type="submit">Enviar</button>
+          </form>
+        </div>
+        <div class="demo-code"><pre><span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="val">"/enviar"</span> <span class="attr">method</span>=<span class="val">"POST"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="val">"nombre"</span><span class="tag">&gt;</span>Nombre:<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"text"</span>     <span class="attr">id</span>=<span class="val">"nombre"</span> <span class="attr">required</span> <span class="attr">placeholder</span>=<span class="val">"..."</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"email"</span>    <span class="cmt">&lt;!-- valida formato email --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"password"</span> <span class="cmt">&lt;!-- oculta texto --&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"number"</span>   <span class="attr">min</span>=<span class="val">"0"</span> <span class="attr">max</span>=<span class="val">"100"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"date"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"color"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"range"</span>    <span class="attr">min</span>=<span class="val">"0"</span> <span class="attr">max</span>=<span class="val">"100"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"checkbox"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"radio"</span>     <span class="attr">name</span>=<span class="val">"grupo"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="val">"file"</span>     <span class="attr">accept</span>=<span class="val">".jpg,.png"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;select&gt;&lt;option&gt;</span>...<span class="tag">&lt;/option&gt;&lt;/select&gt;</span>
+  <span class="tag">&lt;textarea</span> <span class="attr">rows</span>=<span class="val">"4"</span><span class="tag">&gt;&lt;/textarea&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="val">"submit"</span><span class="tag">&gt;</span>Enviar<span class="tag">&lt;/button&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="val">"reset"</span><span class="tag">&gt;</span>Limpiar<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== MULTIMEDIA ====== -->
+    <section id="multimedia">
+      <h3>🖼️ Multimedia</h3>
+      <p>Imágenes, video, audio e iframes embebidos.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> código</div>
+        <div class="demo-code"><pre><span class="cmt">&lt;!-- IMAGEN --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"foto.jpg"</span> <span class="attr">alt</span>=<span class="val">"Descripción"</span> <span class="attr">width</span>=<span class="val">"300"</span> <span class="attr">loading</span>=<span class="val">"lazy"</span><span class="tag">/&gt;</span>
+
+<span class="cmt">&lt;!-- IMAGEN RESPONSIVA con picture --&gt;</span>
+<span class="tag">&lt;picture&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">media</span>=<span class="val">"(min-width:800px)"</span> <span class="attr">srcset</span>=<span class="val">"grande.jpg"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"pequeña.jpg"</span> <span class="attr">alt</span>=<span class="val">"..."</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/picture&gt;</span>
+
+<span class="cmt">&lt;!-- VIDEO --&gt;</span>
+<span class="tag">&lt;video</span> <span class="attr">controls</span> <span class="attr">autoplay</span> <span class="attr">muted</span> <span class="attr">loop</span> <span class="attr">poster</span>=<span class="val">"thumb.jpg"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="val">"video.mp4"</span> <span class="attr">type</span>=<span class="val">"video/mp4"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/video&gt;</span>
+
+<span class="cmt">&lt;!-- AUDIO --&gt;</span>
+<span class="tag">&lt;audio</span> <span class="attr">controls</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;source</span> <span class="attr">src</span>=<span class="val">"cancion.mp3"</span> <span class="attr">type</span>=<span class="val">"audio/mpeg"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/audio&gt;</span>
+
+<span class="cmt">&lt;!-- IFRAME (embebido) --&gt;</span>
+<span class="tag">&lt;iframe</span>
+  <span class="attr">src</span>=<span class="val">"https://www.youtube.com/embed/VIDEO_ID"</span>
+  <span class="attr">width</span>=<span class="val">"560"</span> <span class="attr">height</span>=<span class="val">"315"</span>
+  <span class="attr">frameborder</span>=<span class="val">"0"</span>
+  <span class="attr">allowfullscreen</span>
+<span class="tag">&gt;&lt;/iframe&gt;</span>
+
+<span class="cmt">&lt;!-- FIGURA con pie de foto --&gt;</span>
+<span class="tag">&lt;figure&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"foto.jpg"</span> <span class="attr">alt</span>=<span class="val">"..."</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;figcaption&gt;</span>Pie de foto descriptivo<span class="tag">&lt;/figcaption&gt;</span>
+<span class="tag">&lt;/figure&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== SEMANTICA ====== -->
+    <section id="semantica">
+      <h3>🧩 Etiquetas Semánticas</h3>
+      <p>HTML5 introdujo etiquetas con significado. Mejoran el SEO y la accesibilidad.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> estructura semántica típica</div>
+        <div class="demo-code"><pre><span class="tag">&lt;header&gt;</span>    <span class="cmt">&lt;!-- encabezado de página o sección --&gt;</span>
+  <span class="tag">&lt;nav&gt;</span>     <span class="cmt">&lt;!-- menú de navegación --&gt;</span>
+    <span class="tag">&lt;ul&gt;&lt;li&gt;&lt;a</span> <span class="attr">href</span>=<span class="val">"#"</span><span class="tag">&gt;</span>Inicio<span class="tag">&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;</span>
+  <span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="tag">&lt;main&gt;</span>       <span class="cmt">&lt;!-- contenido principal (único por página) --&gt;</span>
+  <span class="tag">&lt;article&gt;</span> <span class="cmt">&lt;!-- contenido independiente (post, noticia) --&gt;</span>
+    <span class="tag">&lt;section&gt;</span><span class="cmt">&lt;!-- sección temática dentro del artículo --&gt;</span>
+      <span class="tag">&lt;h2&gt;</span>Sección<span class="tag">&lt;/h2&gt;</span>
+      <span class="tag">&lt;p&gt;</span>Contenido<span class="tag">&lt;/p&gt;</span>
+    <span class="tag">&lt;/section&gt;</span>
+  <span class="tag">&lt;/article&gt;</span>
+
+  <span class="tag">&lt;aside&gt;</span>    <span class="cmt">&lt;!-- contenido relacionado / sidebar --&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Contenido secundario<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/aside&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>     <span class="cmt">&lt;!-- pie de página --&gt;</span>
+  <span class="tag">&lt;p&gt;</span>&amp;copy; 2025 Mi sitio<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/footer&gt;</span>
+
+<span class="cmt">&lt;!-- div y span: sin semántica, para estructura/estilos --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"contenedor"</span><span class="tag">&gt;</span>bloque genérico<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;span</span> <span class="attr">class</span>=<span class="val">"highlight"</span><span class="tag">&gt;</span>inline genérico<span class="tag">&lt;/span&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== ESPECIALES ====== -->
+    <section id="especiales">
+      <h3>✨ Elementos Especiales</h3>
+      <p>Elementos interactivos y de datos que muchos desconocen.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot preview"></span> preview</div>
+        <div class="demo-preview" style="display:flex;flex-direction:column;gap:1rem">
+          <div>
+            <strong>details + summary (acordeón nativo):</strong>
+            <details>
+              <summary>Haz clic para ver más</summary>
+              <p>Este contenido se muestra al expandir. ¡Sin JS!</p>
+            </details>
+          </div>
+          <div>
+            <strong>progress:</strong>
+            <progress value="70" max="100"></progress>
+          </div>
+          <div>
+            <strong>meter (valor dentro de un rango):</strong>
+            <meter value="0.7" min="0" max="1" low="0.3" high="0.8">70%</meter>
+          </div>
+          <div>
+            <strong>dialog (modal nativo HTML5):</strong>
+            <button onclick="document.getElementById('mDialog').showModal()">Abrir modal</button>
+            <dialog id="mDialog" style="border-radius:8px;padding:1.5rem;border:1px solid #ccc">
+              <p>Esto es un &lt;dialog&gt; nativo</p>
+              <button onclick="document.getElementById('mDialog').close()">Cerrar</button>
+            </dialog>
+          </div>
+          <div>
+            <strong>datalist (sugerencias en input):</strong>
+            <input list="ciudades" placeholder="Escribe una ciudad..." style="border:1px solid #ccc;padding:0.3rem;border-radius:4px"/>
+            <datalist id="ciudades">
+              <option value="Barranquilla"/>
+              <option value="Bogotá"/>
+              <option value="Medellín"/>
+              <option value="Cali"/>
+            </datalist>
+          </div>
+        </div>
+        <div class="demo-code"><pre><span class="cmt">&lt;!-- Acordeón nativo --&gt;</span>
+<span class="tag">&lt;details&gt;</span>
+  <span class="tag">&lt;summary&gt;</span>Título visible<span class="tag">&lt;/summary&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Contenido oculto<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/details&gt;</span>
+
+<span class="cmt">&lt;!-- Barra de progreso --&gt;</span>
+<span class="tag">&lt;progress</span> <span class="attr">value</span>=<span class="val">"70"</span> <span class="attr">max</span>=<span class="val">"100"</span><span class="tag">&gt;&lt;/progress&gt;</span>
+
+<span class="cmt">&lt;!-- Medidor con rangos --&gt;</span>
+<span class="tag">&lt;meter</span> <span class="attr">value</span>=<span class="val">"0.7"</span> <span class="attr">min</span>=<span class="val">"0"</span> <span class="attr">max</span>=<span class="val">"1"</span> <span class="attr">low</span>=<span class="val">"0.3"</span> <span class="attr">high</span>=<span class="val">"0.8"</span><span class="tag">&gt;</span>70%<span class="tag">&lt;/meter&gt;</span>
+
+<span class="cmt">&lt;!-- Modal nativo --&gt;</span>
+<span class="tag">&lt;dialog</span> <span class="attr">id</span>=<span class="val">"miModal"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Contenido del modal<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="val">"miModal.close()"</span><span class="tag">&gt;</span>Cerrar<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/dialog&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">onclick</span>=<span class="val">"miModal.showModal()"</span><span class="tag">&gt;</span>Abrir<span class="tag">&lt;/button&gt;</span>
+
+<span class="cmt">&lt;!-- Sugerencias en input --&gt;</span>
+<span class="tag">&lt;input</span> <span class="attr">list</span>=<span class="val">"ciudades"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;datalist</span> <span class="attr">id</span>=<span class="val">"ciudades"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;option</span> <span class="attr">value</span>=<span class="val">"Barranquilla"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/datalist&gt;</span></pre></div>
+      </div>
+    </section>
+
+    <!-- ====== META ====== -->
+    <section id="meta">
+      <h3>🧠 Meta &amp; Head</h3>
+      <p>Lo que va en el <code>&lt;head&gt;</code> no se ve pero es fundamental para el navegador, SEO y redes sociales.</p>
+      <div class="demo-block">
+        <div class="demo-label"><span class="dot code"></span> head completo</div>
+        <div class="demo-code"><pre><span class="tag">&lt;head&gt;</span>
+  <span class="cmt">&lt;!-- Charset y viewport (SIEMPRE primero) --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="val">"UTF-8"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"viewport"</span> <span class="attr">content</span>=<span class="val">"width=device-width, initial-scale=1.0"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Título y descripción (SEO) --&gt;</span>
+  <span class="tag">&lt;title&gt;</span>Mi Página | Breyner Dev<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"description"</span> <span class="attr">content</span>=<span class="val">"Descripción de 160 chars máximo"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"keywords"</span> <span class="attr">content</span>=<span class="val">"html, css, javascript"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="val">"author"</span> <span class="attr">content</span>=<span class="val">"Breyner"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Open Graph (preview en redes sociales) --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:title"</span> <span class="attr">content</span>=<span class="val">"Mi Página"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:description"</span> <span class="attr">content</span>=<span class="val">"..."</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:image"</span> <span class="attr">content</span>=<span class="val">"thumb.jpg"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">property</span>=<span class="val">"og:url"</span> <span class="attr">content</span>=<span class="val">"https://mipagina.com"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Favicon --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"icon"</span> <span class="attr">href</span>=<span class="val">"favicon.ico"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"icon"</span> <span class="attr">href</span>=<span class="val">"icon.png"</span> <span class="attr">type</span>=<span class="val">"image/png"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- CSS externo --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span> <span class="attr">href</span>=<span class="val">"styles.css"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- JS externo (defer = carga sin bloquear HTML) --&gt;</span>
+  <span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"app.js"</span> <span class="attr">defer</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+  <span class="cmt">&lt;!-- Fuentes Google --&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="val">"preconnect"</span> <span class="attr">href</span>=<span class="val">"https://fonts.googleapis.com"</span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;link</span> <span class="attr">href</span>=<span class="val">"https://fonts.googleapis.com/css2?family=Roboto&display=swap"</span> <span class="attr">rel</span>=<span class="val">"stylesheet"</span><span class="tag">/&gt;</span>
+
+  <span class="cmt">&lt;!-- Redireccion automática --&gt;</span>
+  <span class="tag">&lt;meta</span> <span class="attr">http-equiv</span>=<span class="val">"refresh"</span> <span class="attr">content</span>=<span class="val">"5; url=nueva-pagina.html"</span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/head&gt;</span></pre></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>

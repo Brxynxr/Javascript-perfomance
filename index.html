@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Referencia Web Completa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: #1e1e2e;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --html: #ff6b35;
+      --css: #4fc3f7;
+      --js: #ffd54f;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+    }
+
+    h1 span.html { color: var(--html); }
+    h1 span.css  { color: var(--css);  }
+    h1 span.js   { color: var(--js);   }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 3.5rem;
+      font-weight: 300;
+    }
+
+    .cards {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card {
+      position: relative;
+      width: 200px;
+      aspect-ratio: 3/4;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: inherit;
+    }
+
+    .card:hover { transform: translateY(-8px); }
+    .card:hover::before { opacity: 1; }
+
+    .card.html { --accent: var(--html); }
+    .card.css  { --accent: var(--css);  }
+    .card.js   { --accent: var(--js);   }
+
+    .card::before {
+      background: radial-gradient(ellipse at center top, color-mix(in srgb, var(--accent) 15%, transparent), transparent 70%);
+    }
+
+    .card:hover { border-color: var(--accent); box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 20%, transparent); }
+
+    .card-icon {
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .card-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
+
+    .card-cta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+      padding: 0.35rem 0.8rem;
+      border-radius: 2rem;
+      transition: background 0.2s;
+    }
+
+    .card:hover .card-cta {
+      background: color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      z-index: 1;
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: 0;
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb1 { width: 300px; height: 300px; background: var(--html); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb2 { width: 250px; height: 250px; background: var(--css); bottom: -80px; right: 10%; animation-delay: 3s; }
+    .orb3 { width: 200px; height: 200px; background: var(--js); top: 40%; left: 60%; animation-delay: 6s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%       { transform: translateY(-30px) scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero">
+    <div class="badge">referencia completa · breyner dev</div>
+    <h1>
+      <span class="html">HTML</span> +
+      <span class="css">CSS</span> +
+      <span class="js">JS</span>
+    </h1>
+    <p class="subtitle">Todo lo que necesitas saber, en un solo lugar</p>
+
+    <div class="cards">
+      <a href="html-reference.html" class="card html">
+        <div class="card-icon">🏗️</div>
+        <div class="card-title">HTML</div>
+        <div class="card-desc">Etiquetas, semántica, formularios, multimedia y más</div>
+        <div class="card-cta">Explorar →</div>
+      </a>
+
+      <a href="css-reference.html" class="card css">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">CSS</div>
+        <div class="card-desc">Selectores, Flexbox, Grid, animaciones y propiedades</div>
+        <div class="card-cta">Explorar →</div>
+      </a>
+
+      <a href="js-reference.html" class="card js">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">JavaScript</div>
+        <div class="card-desc">Variables, funciones, DOM, eventos, APIs y más</div>
+        <div class="card-cta">Explorar →</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">el que sabe sabe · web-reference-repo</div>
+</body>
+</html>
